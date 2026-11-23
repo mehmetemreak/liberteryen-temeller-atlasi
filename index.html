@@ -47,7 +47,7 @@ p{margin:0 0 12px;max-width:70ch}
 .navin{max-width:1240px;margin:0 auto}
 .navrow{display:flex;gap:6px;overflow-x:auto;align-items:center;scrollbar-width:none}
 .navrow::-webkit-scrollbar{display:none}
-.navrow.sub{margin-top:8px;padding-bottom:2px}
+.navrow.sub{margin-top:8px;margin-bottom:0;padding-bottom:2px;color:inherit}
 .brand{font-family:"DM Serif Display",Georgia,serif;font-size:20px;margin-right:10px;white-space:nowrap}
 .nav button,.nav a{flex:none;min-height:40px;font:500 14px "IBM Plex Sans",sans-serif;padding:0 13px;border:1px solid transparent;border-radius:var(--rs);background:transparent;color:var(--ink);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;transition:background .15s,border-color .15s}
 .nav button:hover,.nav a:hover{background:var(--soft)}
@@ -187,6 +187,7 @@ tr:last-child td{border-bottom:none}
   .navin>.navrow:first-child{display:contents}
   .navrow.sub{margin-top:0;margin-left:10px;padding-left:12px;border-left:1px solid var(--line)}
   #themeBtn{order:9}
+  .navrow.sub[data-grp=lib]{order:10;flex-basis:100%;margin:2px 0 0;padding-left:0;border-left:0}
   .srch input{width:15em}
   .chips button{min-height:34px;font-size:13px;padding:0 11px}
   .tvl li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 28px;align-items:center}
