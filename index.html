@@ -480,16 +480,32 @@ const xs=["önceden verili","akıl","anlaşma","sonuç","gelenek"];
 for(let i=0;i<5;i++){g+=`<text class="ax" x="${L+(i+.5)*cw}" y="${H-8}" text-anchor="middle">X${i+1}${nw?"":" "+xs[i]}</text><text class="ax" x="${L+5}" y="${Tp+i*ch+15}">Y${i+1}${nw?"":" "+LY[i+1].toLowerCase()}</text>`}
 const groups={};T.forEach(t=>{const k=t.X+"|"+t.Y;(groups[k]=groups[k]||[]).push(t)});
 const pos={};Object.values(groups).forEach(a=>{const n=a.length,st=Math.min(ch*.78/n,22);a.forEach((t,i)=>{pos[t.id]=[px(t.X),py(t.Y)+(i-(n-1)/2)*st+(n>1?6:4),n]})});
-let lines="",dots="";
+let lines="";const dotsA=[],labs=[],obst=[];
+const mc=draw.mc||(draw.mc=document.createElement("canvas").getContext("2d"));
+const tw=(x,bold,sz)=>{mc.font=`${bold?600:400} ${sz}px "IBM Plex Sans",system-ui,sans-serif`;return mc.measureText(x).width};
 T.forEach(t=>{const [X,Y,cn]=pos[t.id],c=F[t.f].c,on=t.id==cur,dim=fam&&t.f!=fam,op=dim?.15:1;
 if(t.bar)lines+=`<line x1="${px(t.bar[0])}" y1="${Y}" x2="${px(t.bar[1])}" y2="${Y}" stroke="${c}" stroke-width="2" stroke-dasharray="4 4" opacity="${dim?.1:.55}"/>`;
 if(t.vbar)lines+=`<line x1="${X}" y1="${py(t.vbar[0])}" x2="${X}" y2="${py(t.vbar[1])}" stroke="${c}" stroke-width="2" stroke-dasharray="4 4" opacity="${dim?.1:.55}"/>`;
-if(t.to){const X2=px(t.to.X),Y2=py(t.to.Y)+10;lines+=`<g opacity="${op}"><line x1="${X}" y1="${Y}" x2="${X2}" y2="${Y2}" stroke="${c}" stroke-width="1.5" stroke-dasharray="3 3"/><circle cx="${X2}" cy="${Y2}" r="4.5" fill="var(--soft)" stroke="${c}" stroke-width="1.5"/>${(!nw||on)?`<text x="${X2+8}" y="${Y2+4}" class="ax">${esc(t.n)} ${t.to.lab}</text>`:""}</g>`}
-const left=t.X>=4.5&&!(t.X==5&&t.n.length*7<cw/2-14),show=!nw||on||(cn==1&&t.n.length*7<cw-14)||(fam&&t.f==fam);
-dots+=`<g class="dot" tabindex="0" role="button" aria-label="${esc(t.n)}" data-id="${t.id}" opacity="${op}"><circle cx="${X}" cy="${Y}" r="16" fill="transparent"/><circle cx="${X}" cy="${Y}" r="10" fill="none" stroke="${on?c:"transparent"}" stroke-width="2"/><circle cx="${X}" cy="${Y}" r="5.5" fill="${t.u?"var(--soft)":c}" stroke="${c}" stroke-width="${t.u?2:0}"/>${show?`<text x="${left?X-10:X+10}" y="${Y+4}" text-anchor="${left?"end":"start"}" style="font-weight:${on?600:400}">${esc(t.n)}</text>`:""}</g>`});
-g+=lines+dots;
-if(me){const X=px(me.x),Y=py(me.y);g+=`<g><circle cx="${X}" cy="${Y}" r="8" fill="var(--ve)" stroke="var(--soft)" stroke-width="3"/><text x="${me.x>=4?X-13:X+13}" y="${Y-10}" text-anchor="${me.x>=4?"end":"start"}" style="fill:var(--ve);font-weight:600">sen</text></g>`}
-friends.forEach(f=>{const m=posOf(f.sel);if(!m)return;const X=px(m.x)+9,Y=py(m.y)+9;g+=`<g><circle cx="${X}" cy="${Y}" r="7" fill="var(--soft)" stroke="var(--ink)" stroke-width="2.5"/><text x="${m.x>=4?X-12:X+12}" y="${Y+17}" text-anchor="${m.x>=4?"end":"start"}" style="font-weight:600">${esc(f.n)}</text></g>`});
+if(t.to){const X2=px(t.to.X),Y2=py(t.to.Y)+10;lines+=`<g opacity="${op}"><line x1="${X}" y1="${Y}" x2="${X2}" y2="${Y2}" stroke="${c}" stroke-width="1.5" stroke-dasharray="3 3"/><circle cx="${X2}" cy="${Y2}" r="4.5" fill="var(--soft)" stroke="${c}" stroke-width="1.5"/></g>`;obst.push({b:[X2-5,Y2-5,X2+5,Y2+5],own:t.id+"~"});if(!nw||on)labs.push({x:X2,y:Y2,txt:`${t.n} ${t.to.lab}`,sz:12,cls:"ax",pri:on?1:4,pref:"r",own:t.id+"~",op,d:8})}
+const show=!nw||on||cn==1||(fam&&t.f==fam);
+obst.push({b:[X-6,Y-6,X+6,Y+6],own:t.id});
+const L0={x:X,y:Y,txt:t.n,sz:13,bold:on,pri:on?1:(fam&&t.f==fam?2:3),pref:t.X>=4.5&&!(t.X==5&&tw(t.n,0,13)<cw/2-14)?"l":"r",own:t.id,op,d:10};
+if(show)labs.push(L0);
+dotsA.push({t,X,Y,c,on,op,L:show?L0:null})});
+const meP=me?{x:px(me.x),y:py(me.y)}:null;
+if(meP){obst.push({b:[meP.x-9,meP.y-9,meP.x+9,meP.y+9],own:"me"});labs.push({x:meP.x,y:meP.y,txt:"sen",sz:13,bold:1,pri:0,pref:me.x>=4?"l":"r",own:"me",d:13,sty:"fill:var(--ve);font-weight:600"})}
+const frP=friends.map(f=>{const m=posOf(f.sel);if(!m)return null;const o={x:px(m.x)+9,y:py(m.y)+9,f};obst.push({b:[o.x-8,o.y-8,o.x+8,o.y+8],own:"fr"+f.code});o.L={x:o.x,y:o.y,txt:f.n,sz:13,bold:1,pri:0,pref:m.x>=4?"l":"r",own:"fr"+f.code,d:12,sty:"font-weight:600"};labs.push(o.L);return o}).filter(Boolean);
+const hit=(p,q)=>p[0]<q[2]&&p[2]>q[0]&&p[1]<q[3]&&p[3]>q[1];
+const placed=[];
+labs.sort((p,q)=>p.pri-q.pri).forEach(l=>{const w=tw(l.txt,l.bold,l.sz),d=l.d,o=l.pref=="l"?["l","r","ul","dl","ur","dr"]:["r","l","ur","dr","ul","dl"];
+const at=k=>{const rt=k.endsWith("r"),dy=k[0]=="u"?-12:k[0]=="d"?14:0,ax=rt?l.x+d:l.x-d,ay=l.y+4+dy;return{ax,ay,an:rt?"start":"end",box:rt?[ax,ay-11,ax+w,ay+3]:[ax-w,ay-11,ax,ay+3]}};
+for(const k of o){const c=at(k),bx=c.box;if(bx[0]<2||bx[2]>W-2||bx[1]<Tp+16&&bx[0]<L+(nw?24:130)||bx[1]<Tp||bx[3]>Tp+ih)continue;if(placed.some(q=>hit(q,[bx[0]-5,bx[1]-1,bx[2]+5,bx[3]+1])))continue;if(obst.some(q=>q.own!==l.own&&hit(q.b,bx)))continue;placed.push(bx);l.at=c;break}
+if(!l.at&&l.pri<=1){l.at=at(o[0]);placed.push(l.at.box)}});
+const txt=l=>l&&l.at?`<text x="${l.at.ax}" y="${l.at.ay}" text-anchor="${l.at.an}"${l.cls?` class="${l.cls}"`:""} style="${l.sty||`font-weight:${l.bold?600:400}`}">${esc(l.txt)}</text>`:"";
+let dots="";dotsA.forEach(({t,X,Y,c,on,op,L})=>{dots+=`<g class="dot" tabindex="0" role="button" aria-label="${esc(t.n)}" data-id="${t.id}" opacity="${op}"><circle cx="${X}" cy="${Y}" r="16" fill="transparent"/><circle cx="${X}" cy="${Y}" r="10" fill="none" stroke="${on?c:"transparent"}" stroke-width="2"/><circle cx="${X}" cy="${Y}" r="5.5" fill="${t.u?"var(--soft)":c}" stroke="${c}" stroke-width="${t.u?2:0}"/>${txt(L)}</g>`});
+g+=lines+labs.filter(l=>l.cls).map(l=>`<g opacity="${l.op}">${txt(l)}</g>`).join("")+dots;
+if(meP)g+=`<g><circle cx="${meP.x}" cy="${meP.y}" r="8" fill="var(--ve)" stroke="var(--soft)" stroke-width="3"/>${txt(labs.find(l=>l.own=="me"))}</g>`;
+frP.forEach(o=>{g+=`<g><circle cx="${o.x}" cy="${o.y}" r="7" fill="var(--soft)" stroke="var(--ink)" stroke-width="2.5"/>${txt(o.L)}</g>`});
 s.innerHTML=g;
 };
 const show=id=>{
