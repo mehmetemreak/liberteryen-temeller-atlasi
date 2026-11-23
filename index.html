@@ -32,7 +32,7 @@ button:focus-visible,a:focus-visible,.dot:focus-visible,summary:focus-visible{ou
 .mapgrid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:24px;margin-top:14px}
 .fig{position:relative;min-height:600px;border:1px solid var(--line);background:var(--soft)}
 .fig>svg{position:absolute;inset:0;width:100%;height:100%}
-svg text{font:13px "IBM Plex Sans",sans-serif;fill:var(--ink);paint-order:stroke;stroke:var(--soft);stroke-width:4px}
+svg text{font:13px "IBM Plex Sans",sans-serif;fill:var(--ink);paint-order:stroke;stroke:var(--soft);stroke-width:3px;stroke-linejoin:round}
 svg .ax{fill:var(--mute);font-size:12px}
 .dot{cursor:pointer;outline:none}
 .legend{font-size:13px;color:var(--mute);margin-top:8px;display:flex;flex-wrap:wrap;gap:4px 16px}
@@ -61,7 +61,7 @@ th{font-weight:600;color:var(--mute);font-size:13px}
 .qs legend{font-weight:600;margin-bottom:8px;padding:0}
 .opt{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
 .opt button{line-height:1.3;padding:8px 12px}
-.result{border:2px solid var(--ve);padding:22px;position:sticky;top:80px}
+.result{border:2px solid var(--ve);padding:22px;position:sticky;top:130px}
 .result .big{font-family:"DM Serif Display",Georgia,serif;font-size:clamp(24px,2.6vw,30px);line-height:1.15;margin-bottom:10px}
 .result .warn{border-top:1px solid var(--line);padding-top:10px;margin-top:6px}
 .result .warn p{margin-bottom:8px}
@@ -112,24 +112,47 @@ th{font-weight:600;color:var(--mute);font-size:13px}
 .cmpf a,.tvs a,.fb a{color:inherit}
 .fb{border:2px solid var(--ve);padding:10px 14px;margin-top:16px}
 .backbtn{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;z-index:5;max-width:calc(100% - 32px);font:600 14px "IBM Plex Sans",sans-serif;min-height:44px;padding:0 18px;border:2px solid var(--ve);border-radius:22px;background:var(--bg);color:var(--ink);cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.25);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.navin{max-width:1240px;margin:0 auto}
+.result a{color:inherit;font-weight:600}
+.tools .srch,.tools .chips{margin-top:18px}
+@media(min-width:1000px){
+.top{padding-top:28px;padding-bottom:24px}
+.top h1{font-size:44px}
+.top .lead{font-size:17px;max-width:none;margin-top:10px}
+.top .sub{max-width:none;margin-bottom:0}
+.tools .chips{flex:1 1 30em}
+.navin{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.navin>.navrow:first-child{display:contents}
+.navrow.sub{margin-top:0;margin-left:12px;padding-left:12px;border-left:1px solid var(--line)}
+#themeBtn{order:9}
+.tools{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin-top:16px}
+.tools .srch,.tools .chips{margin-top:0}
+.srch input{width:15em}
+.chips button{min-height:36px;font-size:13px;padding:0 10px}
+.mapgrid{margin-top:16px}
+.tvl li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 28px;align-items:center}
+.tvl li .tvq,.tvl li .tag{grid-column:1;margin:0}
+.tvl li .tv{grid-column:2;grid-row:1/span 2;margin:0}
+}
 footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 @media(max-width:900px){.mapgrid,.finder{grid-template-columns:minmax(0,1fr)}.result{position:static}}
 @media(max-width:600px){.fig{min-height:480px}.opt{grid-template-columns:minmax(0,1fr)}.probs article{grid-template-columns:minmax(0,1fr)}.tl li{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body>
-<nav class="nav" aria-label="Görünümler">
+<nav class="nav" aria-label="Görünümler"><div class="navin">
 <div class="navrow"><span class="brand">Liberteryen Temeller Atlası</span><button type="button" class="tab" data-go="kesfet">Keşfet</button><button type="button" class="tab" data-go="lib">Kütüphane</button><button id="themeBtn" type="button" aria-label="Açık ve koyu tema arasında geçiş yap">Koyu tema</button></div>
-<div class="navrow sub" id="subnav" hidden><button type="button" class="tab" data-go="lib:temeller">Temeller</button><button type="button" class="tab" data-go="lib:sorunlar">Sorunlar ve ampirik notlar</button><button type="button" class="tab" data-go="lib:deneyler">Düşünce deneyleri</button><button type="button" class="tab" data-go="lib:kronoloji">Kronoloji</button><button type="button" class="tab" data-go="lib:elestiri">Eleştiriler ve çeper</button><button type="button" class="tab" data-go="lib:kaynaklar">Kaynaklar ve yöntem</button></div>
-</nav>
-<header class="band top" data-view="kesfet">
+<div class="navrow sub" data-grp="kesfet"><button type="button" class="tab" data-go="kesfet:harita">Harita</button><button type="button" class="tab" data-go="kesfet:konum" id="tab-konum">Konumunu bul</button><button type="button" class="tab" data-go="kesfet:tavirlar" id="tab-tav">Tavırların</button></div>
+<div class="navrow sub" data-grp="lib" hidden><button type="button" class="tab" data-go="lib:temeller">Temeller</button><button type="button" class="tab" data-go="lib:sorunlar">Sorunlar ve ampirik notlar</button><button type="button" class="tab" data-go="lib:deneyler">Düşünce deneyleri</button><button type="button" class="tab" data-go="lib:kronoloji">Kronoloji</button><button type="button" class="tab" data-go="lib:elestiri">Eleştiriler ve çeper</button><button type="button" class="tab" data-go="lib:kaynaklar">Kaynaklar ve yöntem</button></div>
+</div></nav>
+<header class="band top" data-view="kesfet:harita">
 <div class="wrap">
 <h1>Aynı sonuç, ayrı temeller</h1>
 <p class="lead">Liberteryenler çoğu zaman devletin dar tutulması gerektiğinde anlaşır, ama nedeninde ayrışır. Bu atlas o ayrışmayı bir okuma ilkesi olarak kullanıyor: her temel, kendine özgü bir sorunu devralır. Bu bir kanıt değil, bir düzenleme ilkesi. İstisnası da var: sol liberteryenler sonuçta da ayrışır.</p>
 <p class="sub">Yatay eksen hakların bağlayıcılığının nereden geldiği, dikey eksen meşru zorlamanın kapsamı. Her koordinat, <a href="#kodlama">kodlama ölçütlerinden</a> türetilmiştir (Kütüphane → Kaynaklar ve yöntem).</p>
 <div id="fbanner"></div>
-<div class="srch"><label for="search">Düşünür ara</label><input id="search" type="search" list="names" placeholder="ör. Rand, Hayek, Ostrom" autocomplete="off" enterkeyhint="search"><span id="srchmsg" class="tag" aria-live="polite"></span><datalist id="names"></datalist></div>
-<div class="chips" id="filters" role="group" aria-label="Aileye göre filtrele"></div>
+<div class="tools"><div class="srch"><label for="search">Düşünür ara</label><input id="search" type="search" list="names" placeholder="ör. Rand, Hayek, Ostrom" autocomplete="off" enterkeyhint="search"><span id="srchmsg" class="tag" aria-live="polite"></span><datalist id="names"></datalist></div>
+<div class="chips" id="filters" role="group" aria-label="Aileye göre filtrele"></div></div>
 <div class="mapgrid">
 <div>
 <div class="fig" aria-label="Düşünür haritası"><svg id="map" role="img" aria-label="Düşünürlerin iki eksenli haritası"></svg></div>
@@ -165,7 +188,7 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 </div>
 </section>
 
-<section class="band" id="konum" data-view="kesfet" style="background:var(--soft)">
+<section class="band" id="konum" data-view="kesfet:konum" style="background:var(--soft)">
 <div class="wrap">
 <h2>Konumunu bul</h2>
 <p class="sub">On soru, gerçek ayrım noktalarını test ediyor. Hiçbir seçenek bir aile adı taşımıyor ve hiçbir pozisyon önceden seçili değil. 1. ve 5. soruyu cevaplayınca haritaya bir nokta düşer; diğer sorular hem aile puanını hem noktanın yerini etkiler. Seçimlerin çeliştiğinde gerekçeli bir uyarı çıkar.</p>
@@ -178,7 +201,7 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 </div>
 </section>
 
-<section class="band" id="tavirlar" data-view="kesfet">
+<section class="band" id="tavirlar" data-view="kesfet:tavirlar">
 <div class="wrap">
 <h2>Tavırların</h2>
 <p class="sub">Atlastaki bütün iddialar burada toplu. Kütüphane'de gezerken karşına çıkanlar da aynı iddialar; nereden tavır alırsan al, her yerde aynı kalır. <span id="tvprog"></span></p>
@@ -505,7 +528,7 @@ const W=s.clientWidth,H=s.clientHeight;if(!W)return;
 const nw=W<560,L=6,R=6,Tp=6,Bt=26,iw=W-L-R,ih=H-Tp-Bt,cw=iw/5,ch=ih/5;
 const px=x=>L+(x-.5)*cw,py=y=>Tp+(y-.5)*ch;
 let g="";
-for(let i=0;i<=5;i++){g+=`<line x1="${L+i*cw}" y1="${Tp}" x2="${L+i*cw}" y2="${Tp+ih}" stroke="var(--line)"/><line x1="${L}" y1="${Tp+i*ch}" x2="${L+iw}" y2="${Tp+i*ch}" stroke="var(--line)"/>`}
+const rx=v=>Math.round(v)+.5;for(let i=0;i<=5;i++){g+=`<line x1="${rx(L+i*cw)}" y1="${rx(Tp)}" x2="${rx(L+i*cw)}" y2="${rx(Tp+ih)}" stroke="var(--line)" shape-rendering="crispEdges"/><line x1="${rx(L)}" y1="${rx(Tp+i*ch)}" x2="${rx(L+iw)}" y2="${rx(Tp+i*ch)}" stroke="var(--line)" shape-rendering="crispEdges"/>`}
 const xs=["önceden verili","akıl","anlaşma","sonuç","gelenek"];
 for(let i=0;i<5;i++){g+=`<text class="ax" x="${L+(i+.5)*cw}" y="${H-8}" text-anchor="middle">X${i+1}${nw?"":" "+xs[i]}</text><text class="ax" x="${L+5}" y="${Tp+i*ch+15}">Y${i+1}${nw?"":" "+LY[i+1].toLowerCase()}</text>`}
 const groups={};T.forEach(t=>{const k=t.X+"|"+t.Y;(groups[k]=groups[k]||[]).push(t)});
@@ -558,7 +581,7 @@ const calc=()=>{
 let sc={},n=0;
 sel.forEach((j,i)=>{if(j===null)return;n++;const v=Q[i].o[j][1];for(const k in v.f||{})sc[k]=(sc[k]||0)+v.f[k]});
 const x=sel[0]===null?null:1,y=sel[4]===null?null:1;
-me=posOf(sel);
+me=posOf(sel);{const tk=document.getElementById("tab-konum");if(tk)tk.textContent=`Konumunu bul (${n}/${Q.length})`}
 const top=Object.entries(sc).sort((a,b)=>b[1]-a[1]);
 const [a,b,c,d,e,f,h]=sel,w=[];
 if(a===3&&b===0)w.push("Sonuçlara dayanan bir hak, felaket ölçeğindeki bir sonuç karşısında istisnasız kalamaz. İstisnasızlığı korumanın yolu Rule Consequentialism (Kural Sonuççuluğu), ama o zaman kuralın neden hiç esnemediği açıklanmalı.");
@@ -585,7 +608,7 @@ const tf=top[0]?F[top[0][0]]:null,fa=top[0]?FA.find(v=>v.f==top[0][0]):null,tie=
 let html="";
 if(!n)html=`<div class="big">Henüz seçim yok</div><p>Soruların hiçbiri bir aile adı içermiyor; her seçenek birden fazla aileye puan yazar. 1. ve 5. soruyu cevapladığında haritada kırmızı bir nokta belirir.</p>`;
 else{html=`<div class="fam" style="color:${tf?tf.c:"inherit"}">${tf?"Ağırlık merkezi: "+esc(tf.n):""}${tie?" ve "+esc(F[top[1][0]].n):""} · ${n}/${Q.length} soru</div>`;
-html+=me?`<div class="big">En yakın komşuların ${near.map(t=>esc(t.n)).join(", ")}</div>`:`<div class="big">Haritaya yerleşmek için ${x==null?"1.":""}${x==null&&y==null?" ve ":""}${y==null?"5.":""} soruyu cevapla</div>`;
+html+=me?`<div class="big">En yakın komşuların ${near.map(t=>esc(t.n)).join(", ")}</div><p><a href="#map">Haritada konumunu gör →</a></p>`:`<div class="big">Haritaya yerleşmek için ${x==null?"1.":""}${x==null&&y==null?" ve ":""}${y==null?"5.":""} soruyu cevapla</div>`;
 if(fa)html+=`<p><b>Devraldığın sorun:</b> ${esc(fa.b)}</p>`;
 html+=`<div class="warn">${w.length?w.map(t=>`<p class="t">${esc(t)}</p>`).join(""):"<p style=\"color:var(--mute)\">Seçimlerin arasında belirgin bir çelişki yok.</p>"}</div><button type="button" class="reset" id="reset">Seçimleri temizle</button>`}
 res.innerHTML=html;draw();save();renderCmp();
@@ -640,7 +663,7 @@ if(opp.length)h+=`<div class="lbl">Zıt tavır aldığınız iddialar</div><ul>$
 if(unc.length)h+=`<div class="lbl">Belirsiz: birinizin emin olmadığı iddialar</div><ul>${unc.map(c=>li(c,f)).join("")}</ul>`;
 if(!dq.length&&!opp.length&&!unc.length)h+=`<p>Henüz ayrıştığınız bir cevap ya da tavır yok. Konum bulucuyu doldurup kartlardaki iddialara tavır aldıkça burası dolar.</p>`;
 return h+`</details>`}).join("")};
-document.addEventListener("click",e=>{const b=e.target.closest(".tv button");if(b){const cid=b.closest(".tv").dataset.c,v=+b.dataset.v;if(st[cid]===v)delete st[cid];else st[cid]=v;syncTV();save();renderCmp();renderTVF();return}const a=e.target.closest("[data-show]");if(a){e.preventDefault();remember(a);if(view!=="kesfet")setView("kesfet");if(fam&&T.find(t=>t.id==a.dataset.show).f!=fam){fam=null;renderF()}show(a.dataset.show);document.querySelector(".mapgrid").scrollIntoView({behavior:"smooth"})}});
+document.addEventListener("click",e=>{const b=e.target.closest(".tv button");if(b){const cid=b.closest(".tv").dataset.c,v=+b.dataset.v;if(st[cid]===v)delete st[cid];else st[cid]=v;syncTV();save();renderCmp();renderTVF();return}const a=e.target.closest("[data-show]");if(a){e.preventDefault();remember(a);if(view!=="kesfet:harita")setView("kesfet:harita");if(fam&&T.find(t=>t.id==a.dataset.show).f!=fam){fam=null;renderF()}show(a.dataset.show);document.querySelector(".mapgrid").scrollIntoView({behavior:"smooth"})}});
 const nk=document.getElementById("nick"),cpm=document.getElementById("cpmsg");
 nk.addEventListener("input",()=>{nick=nk.value.slice(0,20);save();renderCmp()});
 document.getElementById("copy").addEventListener("click",()=>{const l=link(),lk=document.getElementById("lnk");lk.value=l;const fb=()=>{lk.focus();lk.select();cpm.textContent="Bağlantı seçildi, elle kopyala"};try{navigator.clipboard.writeText(l).then(()=>{cpm.textContent="Kopyalandı"},fb)}catch(err){fb()}});
@@ -654,14 +677,14 @@ const thLbl=()=>{thb.textContent=effTheme()=="dark"?"Açık tema":"Koyu tema"};
 thLbl();
 thb.addEventListener("click",()=>{const n=effTheme()=="dark"?"light":"dark";document.documentElement.dataset.theme=n;try{localStorage.setItem("lta-theme",n)}catch(e){}thLbl()});
 if(mq.addEventListener)mq.addEventListener("change",thLbl);
-let view="kesfet",libLast="lib:temeller",tvF="all";
-const navEl=document.querySelector(".nav"),subnav=document.getElementById("subnav");
-const setView=(v,top)=>{if(v=="lib")v=libLast;if(v.startsWith("lib:"))libLast=v;view=v;document.querySelectorAll("[data-view]").forEach(el=>{el.hidden=el.dataset.view!==v});subnav.hidden=!v.startsWith("lib:");navEl.querySelectorAll(".tab").forEach(b=>{const g=b.dataset.go;b.setAttribute("aria-pressed",String(g==v||(g=="lib"&&v.startsWith("lib:"))))});if(v=="kesfet")draw();if(top)window.scrollTo({top:0})};
-navEl.addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;setView(b.dataset.go,true);b.focus()});
+let view="kesfet:harita",last={kesfet:"kesfet:harita",lib:"lib:temeller"},tvF="all";
+const navEl=document.querySelector(".nav");
+const setView=(v,top)=>{if(last[v])v=last[v];const grp=v.split(":")[0];last[grp]=v;view=v;document.querySelectorAll("[data-view]").forEach(el=>{el.hidden=el.dataset.view!==v});navEl.querySelectorAll(".navrow.sub").forEach(r=>{r.hidden=r.dataset.grp!==grp});navEl.querySelectorAll(".tab").forEach(b=>{const g=b.dataset.go;b.setAttribute("aria-pressed",String(g==v||g==grp))});if(v=="kesfet:harita")draw();if(top)window.scrollTo({top:0})};
+navEl.addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;navStack.length=0;updBack();setView(b.dataset.go,true);b.focus()});
 const goAnchor=id=>{const el=document.getElementById(id);if(!el)return false;const sec=el.closest("[data-view]");if(sec&&sec.dataset.view!==view)setView(sec.dataset.view);el.scrollIntoView({block:"start"});return true};
 document.addEventListener("click",e=>{const a=e.target.closest('a[href^="#"]');if(!a||a.hasAttribute("data-show"))return;let id=a.getAttribute("href").slice(1);try{id=decodeURIComponent(id)}catch(err){}if(!id||id.startsWith("p=")||!document.getElementById(id))return;e.preventDefault();remember(a);goAnchor(id)});
 const TVG=[["t","Düşünürler"],["f","Temeller"],["d","Düşünce deneyleri"],["p","Açık sorunlar"]];
-const renderTVF=()=>{const n=Object.values(st).filter(Boolean).length;document.getElementById("tvprog").textContent=`Şu ana kadar ${n}/${CL.length} iddiada tavır aldın.`;document.getElementById("tvf").innerHTML=[["all","Hepsi"],["0","Cevaplanmamış"],["1","Katılıyorum"],["2","Katılmıyorum"],["3","Emin değilim"]].map(([k,l])=>`<button type="button" data-tf="${k}" aria-pressed="${tvF==k}">${l} (${k=="all"?CL.length:CL.filter(c=>(st[c[0]]||0)==+k).length})</button>`).join("")};
+const renderTVF=()=>{const n=Object.values(st).filter(Boolean).length;{const tt=document.getElementById("tab-tav");if(tt)tt.textContent=`Tavırların (${n}/${CL.length})`}document.getElementById("tvprog").textContent=`Şu ana kadar ${n}/${CL.length} iddiada tavır aldın.`;document.getElementById("tvf").innerHTML=[["all","Hepsi"],["0","Cevaplanmamış"],["1","Katılıyorum"],["2","Katılmıyorum"],["3","Emin değilim"]].map(([k,l])=>`<button type="button" data-tf="${k}" aria-pressed="${tvF==k}">${l} (${k=="all"?CL.length:CL.filter(c=>(st[c[0]]||0)==+k).length})</button>`).join("")};
 const renderTVList=()=>{const pass=c=>tvF=="all"||(st[c[0]]||0)==+tvF;document.getElementById("tvlist").innerHTML=TVG.map(([k,l])=>{const cs=CL.filter(c=>c[1].startsWith(k+":")&&pass(c));return cs.length?`<h3 class="tvh">${l} (${cs.length})</h3><ul class="tvl">${cs.map(c=>`<li><p class="tvq">“${esc(c[2])}”</p><p class="tag">${esc(srcLbl(c[1]))} · ${goto(c)}</p>${tv(c[0],false)}</li>`).join("")}</ul>`:""}).join("")||"<p>Bu filtrede iddia yok.</p>"};
 document.getElementById("tvf").addEventListener("click",e=>{const b=e.target.closest("button[data-tf]");if(!b)return;tvF=b.dataset.tf;renderTVF();renderTVList();document.querySelector(`#tvf [data-tf="${tvF}"]`)?.focus()});
 const SECN={header:"Harita",konum:"Konumunu bul",tavirlar:"Tavırların",temeller:"Temeller",sorunlar:"Açık sorunlar",emprik:"Ampirik notlar",deneyler:"Düşünce deneyleri",kronoloji:"Kronoloji",elestiri:"Dış eleştiriler",ceper:"Çeper",okuma:"Okuma listesi",yontem:"Yöntem",kodlama:"Kodlama"};
