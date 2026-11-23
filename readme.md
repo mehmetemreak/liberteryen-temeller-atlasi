@@ -1,6 +1,6 @@
 # Liberteryen Temeller Atlası — İnteraktif Siyaset Felsefesi Haritası
 
-**Liberteryen Temeller Atlası**, liberteryen siyaset felsefesinin kuramsal temellerini, ekoller arası iç tartışmaları ve çeperindeki fikirleri Türkçe olarak inceleyen **tek dosyalık, interaktif bir web atlasıdır**. 37 düşünürü **hakların kaynağı** ve **meşru zorlamanın kapsamı** eksenlerinde konumlandırır; **7 soruluk konum bulucu** ile kendi felsefi duruşunu harita üzerinde görmeni ve arkadaşlarınla karşılaştırmanı sağlar.
+**Liberteryen Temeller Atlası**, liberteryen siyaset felsefesinin kuramsal temellerini, ekoller arası iç tartışmaları ve çeperindeki fikirleri Türkçe olarak inceleyen **tek dosyalık, interaktif bir web atlasıdır**. 37 düşünürü **hakların kaynağı** ve **meşru zorlamanın kapsamı** eksenlerinde konumlandırır; **10 soruluk konum bulucu** ile kendi felsefi duruşunu harita üzerinde görmeni ve arkadaşlarınla karşılaştırmanı sağlar.
 
 > *"Aynı sonuç, ayrı temeller"* — Özgürlükçü düşüncenin doğal haklar, sonuççuluk, sözleşmecilik, gelenekçi liberalizm ve anarko-kapitalizm gibi farklı temellerden nasıl aynı veya benzer pratik sonuçlara ulaştığını (ve nerelerde ayrıştığını) tek sayfada karşılaştır.
 
@@ -9,7 +9,7 @@
 | Özellik | Açıklama |
 | :--- | :--- |
 | **İki Eksenli Düşünür Haritası** | 37 düşünürü açık kodlama ölçütleriyle *(X: Hakların kaynağı, Y: Meşru zorlamanın kapsamı)* görselleştirir; Türkçe normalizasyonlu arama ve ekol filtrelemesi sunar. |
-| **7 Soruluk Konum Bulucu** | Verdiğin yanıtlara göre seni en yakın düşünürlerle eşleştirir, yanıtların arasındaki felsefi gerilimleri otomatik çelişki uyarılarıyla gösterir. |
+| **10 Soruluk Konum Bulucu** | Verdiğin yanıtlara göre seni en yakın düşünürlerle eşleştirir, yanıtların arasındaki felsefi gerilimleri otomatik çelişki uyarılarıyla gösterir. |
 | **Sunucusuz Karşılaştırma** | Yanıtlarını URL hash'ine (`#p=...`) sıkıştırarak paylaşılabilir bağlantı üretir; en fazla 10 kişinin konumunu ve ayrıştığı soruları yan yana karşılaştırır. |
 | **Felsefi Temeller ve Açık Sorunlar** | Her ekolün temel savunusunu, ana metnini, en güçlü itirazını ve ödediği kuramsal bedeli özetler. |
 | **Düşünce Deneyleri ve Ampirik Notlar** | İlgili düşünce deneylerini, olgusal öncülleri ve tartışmalı iddialara tavır alma kartlarını içerir. |

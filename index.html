@@ -11,7 +11,7 @@
 :root{color-scheme:light dark;--bg:light-dark(#ffffff,#0f1115);--ink:light-dark(#111216,#eceef2);--mute:light-dark(#5b5f6a,#a2a7b3);--line:light-dark(#dcdee3,#2a2e37);--soft:light-dark(#f4f5f8,#171a21);--ve:light-dark(#d4321a,#ff7a5c)}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
-html{scroll-padding-top:72px}
+html{scroll-padding-top:150px}[hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,sans-serif;overflow-x:clip}
 .band{padding:clamp(28px,4vw,56px) max(5vw,16px)}
 .wrap{max-width:1240px;margin:0 auto}
@@ -43,8 +43,8 @@ svg .ax{fill:var(--mute);font-size:12px}
 .card .q{border-left:3px solid var(--line);padding-left:12px;margin:0}
 .card .q b,.kv b{display:block;font-size:13px;color:var(--mute);font-weight:500}
 .kv{font-size:14px;margin:0}.kv a{color:inherit}.stt{font-weight:600}
-.nav{display:flex;gap:6px;overflow-x:auto;padding:10px max(5vw,16px);border-bottom:1px solid var(--line);background:var(--bg)}
-.nav button{flex:none;margin-left:auto;font:14px "IBM Plex Sans",sans-serif;padding:10px 12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.nav{padding:10px max(5vw,16px);border-bottom:1px solid var(--line);background:var(--bg)}.navrow{display:flex;gap:6px;overflow-x:auto;align-items:center}.navrow.sub{margin-top:8px}.brand{font-family:"DM Serif Display",Georgia,serif;font-size:20px;margin-right:10px;white-space:nowrap}.nav .tab[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}#themeBtn{margin-left:auto}.sub a{color:inherit}.tvh{margin-top:18px}.tvl{list-style:none;padding:0;margin:0}.tvl li{border-top:1px solid var(--line);padding:10px 0}.tvl .tag a{color:inherit}@media(max-width:600px){.brand{display:none}}
+.nav button{flex:none;min-height:44px;font:14px "IBM Plex Sans",sans-serif;padding:10px 12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
 .nav a{flex:none;color:var(--ink);text-decoration:none;font-size:14px;padding:10px 12px;border:1px solid var(--line)}
 @media(min-width:900px){.nav{position:sticky;top:0;z-index:2}}
 details{border-top:1px solid var(--line);padding:10px 0}
@@ -117,11 +117,15 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 </style>
 </head>
 <body>
-<header class="band top">
+<nav class="nav" aria-label="Görünümler">
+<div class="navrow"><span class="brand">Liberteryen Temeller Atlası</span><button type="button" class="tab" data-go="kesfet">Keşfet</button><button type="button" class="tab" data-go="lib">Kütüphane</button><button id="themeBtn" type="button" aria-label="Açık ve koyu tema arasında geçiş yap">Koyu tema</button></div>
+<div class="navrow sub" id="subnav" hidden><button type="button" class="tab" data-go="lib:temeller">Temeller</button><button type="button" class="tab" data-go="lib:sorunlar">Sorunlar ve ampirik notlar</button><button type="button" class="tab" data-go="lib:deneyler">Düşünce deneyleri</button><button type="button" class="tab" data-go="lib:kronoloji">Kronoloji</button><button type="button" class="tab" data-go="lib:elestiri">Eleştiriler ve çeper</button><button type="button" class="tab" data-go="lib:kaynaklar">Kaynaklar ve yöntem</button></div>
+</nav>
+<header class="band top" data-view="kesfet">
 <div class="wrap">
 <h1>Aynı sonuç, ayrı temeller</h1>
 <p class="lead">Liberteryenler çoğu zaman devletin dar tutulması gerektiğinde anlaşır, ama nedeninde ayrışır. Bu atlas o ayrışmayı bir okuma ilkesi olarak kullanıyor: her temel, kendine özgü bir sorunu devralır. Bu bir kanıt değil, bir düzenleme ilkesi. İstisnası da var: sol liberteryenler sonuçta da ayrışır.</p>
-<p class="sub">Yatay eksen hakların bağlayıcılığının nereden geldiği, dikey eksen meşru zorlamanın kapsamı. Her koordinat, aşağıdaki kodlama ölçütlerinden türetilmiştir.</p>
+<p class="sub">Yatay eksen hakların bağlayıcılığının nereden geldiği, dikey eksen meşru zorlamanın kapsamı. Her koordinat, <a href="#kodlama">kodlama ölçütlerinden</a> türetilmiştir (Kütüphane → Kaynaklar ve yöntem).</p>
 <div id="fbanner"></div>
 <div class="srch"><label for="search">Düşünür ara</label><input id="search" type="search" list="names" placeholder="ör. Rand, Hayek, Ostrom" autocomplete="off" enterkeyhint="search"><span id="srchmsg" class="tag" aria-live="polite"></span><datalist id="names"></datalist></div>
 <div class="chips" id="filters" role="group" aria-label="Aileye göre filtrele"></div>
@@ -135,11 +139,8 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 </div>
 </header>
 
-<nav class="nav" aria-label="Bölümler">
-<a href="#kodlama">Kodlama</a><a href="#konum">Konumunu bul</a><a href="#temeller">Temeller</a><a href="#sorunlar">Açık sorunlar</a><a href="#emprik">Ampirik notlar</a><a href="#deneyler">Düşünce deneyleri</a><a href="#kronoloji">Kronoloji</a><a href="#elestiri">Dış eleştiriler</a><a href="#ceper">Çeper</a><a href="#okuma">Okuma</a><a href="#yontem">Yöntem</a><button id="themeBtn" type="button" aria-label="Açık ve koyu tema arasında geçiş yap">Koyu tema</button>
-</nav>
 
-<section class="band" id="kodlama">
+<section class="band" id="kodlama" data-view="lib:kaynaklar">
 <div class="wrap">
 <h2>Kodlama ölçütleri</h2>
 <p class="sub">Koordinatlar elle yerleştirilmedi. Her düşünüre bir X ve bir Y düzeyi atandı; aynı hücreye düşenler yalnızca okunabilirlik için dikeyde aralandı. İki kategori arasında kalanlar 0,5'lik ara değer aldı.</p>
@@ -163,20 +164,29 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 </div>
 </section>
 
-<section class="band" id="konum" style="background:var(--soft)">
+<section class="band" id="konum" data-view="kesfet" style="background:var(--soft)">
 <div class="wrap">
 <h2>Konumunu bul</h2>
-<p class="sub">Yedi soru, gerçek ayrım noktalarını test ediyor. Hiçbir seçenek bir aile adı taşımıyor ve hiçbir pozisyon önceden seçili değil. 1. ve 5. soru haritaya bir nokta koyar; diğerleri aile puanını ve dikey konumu etkiler. Seçimlerin çeliştiğinde gerekçeli bir uyarı çıkar.</p>
+<p class="sub">On soru, gerçek ayrım noktalarını test ediyor. Hiçbir seçenek bir aile adı taşımıyor ve hiçbir pozisyon önceden seçili değil. 1. ve 5. soruyu cevaplayınca haritaya bir nokta düşer; diğer sorular hem aile puanını hem noktanın yerini etkiler. Seçimlerin çeliştiğinde gerekçeli bir uyarı çıkar.</p>
 <div class="finder">
 <div class="qs" id="qs"></div>
 <div class="result" id="result" aria-live="polite"></div>
 </div>
 <div id="cmp"><h3>Paylaş ve karşılaştır</h3><p class="note" style="margin-top:0">Cevapların ve tavırların yalnız bu tarayıcıda saklanır, hiçbir sunucuya gitmez. Bağlantı onları kısa bir koda çevirir; açan kişi kendi sonucunu seninkiyle karşılaştırır. Bağlantıyı açan arkadaşın da kendi bağlantısını paylaşırsa, en fazla on kişi aynı haritada görünür. <span id="tvcount"></span></p><div class="share"><label for="nick">Takma ad</label><input id="nick" maxlength="20" placeholder="isteğe bağlı" autocomplete="off"><button type="button" id="copy" class="reset" style="margin-top:0">Bağlantıyı kopyala</button><span id="cpmsg" class="tag" aria-live="polite"></span></div><input id="lnk" readonly aria-label="Paylaşım bağlantısı"><div id="cmplist"></div></div>
-<details><summary>Puanlama nasıl işliyor?</summary><p>Her seçenek bir ya da daha fazla aileye 1–3 puan yazar. En yüksek puanlı aile “ağırlık merkezin” olarak gösterilir. En yakın düşünürler, haritadaki uzaklığa göre bulunur; en yüksek puanlı ailenin üyelerine 0,6, ikinci ailenin üyelerine 0,3 düzeylik yakınlık avantajı verilir. Soru 4 (itaat ödevi yok) noktayı devletsiz yöne 0,3, soru 6 (adalet gereği sosyal minimum) güçlü devlet yönüne 0,4 düzey kaydırır. Bu bir test değil, bir ayna: sonuç, seçimlerinin hangi literatürle konuştuğunu gösterir.</p></details>
+<details><summary>Puanlama nasıl işliyor?</summary><p>Her seçenek bir ya da daha fazla aileye 1–3 puan yazar. En yüksek puanlı aile “ağırlık merkezin” olarak gösterilir. En yakın düşünürler, haritadaki uzaklığa göre bulunur; en yüksek puanlı ailenin üyelerine 0,6, ikinci ailenin üyelerine 0,3 düzeylik yakınlık avantajı verilir. Noktanın yeri ağırlıklı bir ortalamadır. X'te 1. soru üç kat ağırlık taşır; 2., 3. ve 4. sorular birer kat ağırlıkla noktayı kaydırır. Y'de 5. soru üç kat ağırlık taşır; 3. sorudaki eşit pay seçeneği ile 4., 6., 8., 9. ve 10. sorular birer kat ağırlıkla kaydırır. Böylece tek bir cevap konumunu belirlemez. Bu bir test değil, bir ayna: sonuç, seçimlerinin hangi literatürle konuştuğunu gösterir.</p></details>
 </div>
 </section>
 
-<section class="band" id="temeller">
+<section class="band" id="tavirlar" data-view="kesfet">
+<div class="wrap">
+<h2>Tavırların</h2>
+<p class="sub">Atlastaki bütün iddialar burada toplu. Kütüphane'de gezerken karşına çıkanlar da aynı iddialar; nereden tavır alırsan al, her yerde aynı kalır. <span id="tvprog"></span></p>
+<div class="chips" id="tvf" role="group" aria-label="Tavırları filtrele"></div>
+<div id="tvlist"></div>
+</div>
+</section>
+
+<section class="band" id="temeller" data-view="lib:temeller">
 <div class="wrap">
 <h2>Temeller: savunu, itiraz, bedel</h2>
 <p class="sub">Dokuz aile ve çeper, aynı şablonla. Son satır, o temeli seçenin üstlendiği sorun.</p>
@@ -184,7 +194,7 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 </div>
 </section>
 
-<section class="band" id="sorunlar" style="background:var(--soft)">
+<section class="band" id="sorunlar" data-view="lib:sorunlar" style="background:var(--soft)">
 <div class="wrap">
 <h2>Her temeli zorlayan sorunlar</h2>
 <div class="probs" id="probs"></div>
@@ -192,7 +202,7 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 </div>
 </section>
 
-<section class="band" id="emprik">
+<section class="band" id="emprik" data-view="lib:sorunlar">
 <div class="wrap">
 <h2>Ampirik notlar</h2>
 <p class="sub">Bazı iddialar olgusal bir öncüle dayanır ve o öncül bugün sınanabilir. Not öncülü değerlendirir, ilkeyi değil: veri bir öncülü destekler ya da zayıflatır, ama bir normu çürütmez. ▲ destekleniyor · ◆ tartışmalı · ▼ aleyhte</p>
@@ -200,7 +210,7 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 </div>
 </section>
 
-<section class="band" id="deneyler" style="background:var(--soft)">
+<section class="band" id="deneyler" data-view="lib:deneyler" style="background:var(--soft)">
 <div class="wrap">
 <h2>Düşünce deneyleri</h2>
 <p class="sub">Her deney bir sezgiyi seferber eder. Sorulacak soru: bu sezgi gerçekten iddia edilen sonucu mu destekliyor, yoksa başka bir şeyi mi?</p>
@@ -208,7 +218,7 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 </div>
 </section>
 
-<section class="band" id="kronoloji">
+<section class="band" id="kronoloji" data-view="lib:kronoloji">
 <div class="wrap">
 <h2>Tartışma kronolojisi</h2>
 <p class="sub">Kim kime, hangi eserde, ne cevap verdi.</p>
@@ -217,7 +227,7 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 </div>
 </section>
 
-<section class="band" id="elestiri" style="background:var(--soft)">
+<section class="band" id="elestiri" data-view="lib:elestiri" style="background:var(--soft)">
 <div class="wrap">
 <h2>Dışarıdan eleştiriler</h2>
 <p>Seçim ölçütü iki koşul: her eleştiri liberteryen yapının <b>farklı bir katmanını</b> hedeflemeli ve literatürde liberteryenlerden <b>cevap almış</b> olmalı. Böylece aynı itirazın tekrarı yerine, temel, öz-mülkiyet, liberalizmle ilişki, mülkiyetin taban çizgisi, aile ve cinsiyet, ve özel tahakküm olmak üzere altı katman kapsanıyor. Rawls'ın kendisi ayrı kart almadı: Nozick'in Rawls'a cevabı deneylerde ve kronolojide, Rawlsçu eleştiri ise Freeman kartında.</p>
@@ -226,7 +236,7 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 </div>
 </section>
 
-<section class="band dark" id="ceper">
+<section class="band dark" id="ceper" data-view="lib:elestiri">
 <div class="wrap">
 <h2>Çeperdeki fikirler</h2>
 <p style="opacity:.8">Liberteryen değiller, ama liberteryenliğin sınırları onlarla çizilir. Her biri liberteryen bir öncülü alır ve başka bir sonuca varır.</p>
@@ -234,7 +244,7 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 </div>
 </section>
 
-<section class="band" id="okuma">
+<section class="band" id="okuma" data-view="lib:kaynaklar" style="background:var(--soft)">
 <div class="wrap">
 <h2>Okuma listesi</h2>
 <p class="sub">✓ bu sürümde künyesi web'de doğrulandı · ○ standart künye, bu sürümde ayrıca doğrulanmadı. Yıllar ilk yayın tarihidir.</p>
@@ -242,7 +252,7 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 </div>
 </section>
 
-<section class="band" id="yontem" style="background:var(--soft)">
+<section class="band" id="yontem" data-view="lib:kaynaklar">
 <div class="wrap">
 <h2>Kaynaklar ve yöntem</h2>
 <p><b>Pozisyonlar.</b> Düşünür özetleri öncelikle Stanford Encyclopedia of Philosophy (SEP) ve Internet Encyclopedia of Philosophy (IEP) girişlerine göre kontrol edildi: SEP “Libertarianism” (Vallentyne ve van der Vossen), “Robert Nozick's Political Philosophy”, “Max Stirner”, “Locke's Political Philosophy”, “Contractarianism”, “Political Obligation”; IEP “Robert Nozick: Political Philosophy”. Nozick'in 1989'daki geri çekilmesi ve 2001'de bunu küçümsemesi SEP'ten.</p>
@@ -401,13 +411,16 @@ const B=[
 ["Çeper",[["George","A Perplexed Philosopher","1892",1],["Ostrom","Governing the Commons","1990",1],["Land","The Dark Enlightenment","2012",1],["Scott","Against the Grain","2017",0]]]
 ];
 const Q=[
-{q:"Bir hakkı bağlayıcı kılan nedir?",o:[["Kurumlardan bağımsız bir ahlaki olgu olması; tanınmasa da vardır",{x:1,f:{dog:2,sez:1,sol:1}}],["Akıl sahibi bir failin onu tutarlı biçimde reddedememesi",{x:2,f:{apr:2,erd:2}}],["Makul ya da rasyonel kişilerin onu kabul edecek olması",{x:3,f:{soz:2,ka:2}}],["Uyulduğunda insanların durumunu iyileştirmesi",{x:4,f:{son:2}}],["Fiilen uyulan ve beklentileri düzenleyen bir uygulama olması",{x:5,f:{evr:2,cep:1}}]]},
-{q:"Masum birinin mülküne el koymak bin kişiyi açlıktan kurtaracaksa?",o:[["Yine yasak: haklar yan kısıttır",{f:{dog:1,apr:1,erd:1}}],["Belli bir eşiğin üstünde izinli: Threshold Deontology (Eşik Deontolojisi)",{f:{sez:1,ka:1,sol:1}}],["Bir hesap meselesi: doğru kural, en iyi sonucu veren kuraldır",{f:{son:2,evr:1}}]]},
-{q:"Sahipsiz toprak ve doğal kaynaklar nasıl özel mülk olur?",o:[["İlk işleyen tam sahibi olur",{f:{dog:1,apr:1,erd:1}}],["Edinilebilir, yeter ki başkaları bundan kötü etkilenmesin",{f:{dog:1,soz:1}}],["Herkesin eşit payı var; fazlasını kullanan bir rant öder",{f:{sol:3}}],["Mülkiyetin içeriğini geçerli kurallar belirler",{f:{evr:2,ka:1}}]]},
-{q:"Devletin emirlerine, salt devlet emri oldukları için uyma ödevi var mı?",o:[["Var: rızadan ya da kamusal gerekçelendirmeden doğar",{f:{ka:2,soz:1}}],["Var: düzenin kendisi değerlidir",{f:{evr:1,cep:2}}],["Yok: bağlayıcı olan emrin içeriğidir, kaynağı değil",{dy:.3,f:{sez:2,dog:1,apr:1}}]]},
-{q:"Hakları kim uygulamalı?",o:[["Tek ve mutlak bir egemen",{y:1,f:{cep:2}}],["Kamusal malları ve sosyal minimumu da sağlayan sınırlı bir devlet",{y:2}],["Yalnız koruma, yargı ve savunma yapan bir tekel",{y:3}],["Örtüşen, rekabet eden yetki alanları",{y:4}],["Rakip koruma ajansları; devlet yok",{y:5}]]},
-{q:"Bir sosyal minimum (asgari gelir, temel yardım) hakkında?",o:[["Devletin işi değil; gönüllü yardımın işi",{dy:.2,f:{dog:1,apr:1,erd:1}}],["Kabul edilebilir, çünkü sonuçları iyidir",{f:{son:1,evr:1}}],["Adalet gereği: en kötü durumdakilere borçluyuz",{dy:-.4,f:{ka:2,sol:1}}]]},
-{q:"Biri kendini gönüllü olarak köleliğe satarsa sözleşme geçerli mi?",o:[["Geçerli: kendine sahipsen kendini satabilirsin",{f:{dog:1,soz:1}}],["Geçersiz: irade devredilemez",{f:{dog:1,apr:1}}],["Geçersiz: özgür kurumların ön koşuluna aykırı",{f:{ka:1,erd:1}}]]}
+{q:"Bir hakkı bağlayıcı kılan nedir?",wx:3,o:[["Kurumlardan bağımsız bir ahlaki olgu olması; tanınmasa da vardır",{x:1,f:{dog:2,sez:1,sol:1}}],["Akıl sahibi bir failin onu tutarlı biçimde reddedememesi",{x:2,f:{apr:2,erd:2}}],["Makul ya da rasyonel kişilerin onu kabul edecek olması",{x:3,f:{soz:2,ka:2}}],["Uyulduğunda insanların durumunu iyileştirmesi",{x:4,f:{son:2}}],["Fiilen uyulan ve beklentileri düzenleyen bir uygulama olması",{x:5,f:{evr:2,cep:1}}]]},
+{q:"Masum birinin mülküne el koymak bin kişiyi açlıktan kurtaracaksa?",o:[["Yine yasak: haklar yan kısıttır",{x:1.5,f:{dog:1,apr:1,erd:1}}],["Belli bir eşiğin üstünde izinli: Threshold Deontology (Eşik Deontolojisi)",{x:2.5,f:{sez:1,ka:1,sol:1}}],["Bir hesap meselesi: doğru kural, en iyi sonucu veren kuraldır",{x:4,f:{son:2,evr:1}}]]},
+{q:"Sahipsiz toprak ve doğal kaynaklar nasıl özel mülk olur?",o:[["İlk işleyen tam sahibi olur",{x:1,f:{dog:1,apr:1,erd:1}}],["Edinilebilir, yeter ki başkaları bundan kötü etkilenmesin",{x:2,f:{dog:1,soz:1}}],["Herkesin eşit payı var; fazlasını kullanan bir rant öder",{x:1,y:2.5,f:{sol:3}}],["Mülkiyetin içeriğini geçerli kurallar belirler",{x:5,f:{evr:2,ka:1}}]]},
+{q:"Devletin emirlerine, salt devlet emri oldukları için uyma ödevi var mı?",o:[["Var: rızadan ya da kamusal gerekçelendirmeden doğar",{x:3,y:2.5,f:{ka:2,soz:1}}],["Var: düzenin kendisi değerlidir",{x:5,y:1.5,f:{evr:1,cep:2}}],["Yok: bağlayıcı olan emrin içeriğidir, kaynağı değil",{x:1,y:4.5,f:{sez:2,dog:1,apr:1}}]]},
+{q:"Hakları kim uygulamalı?",wy:3,o:[["Tek ve mutlak bir egemen",{y:1,f:{cep:2}}],["Kamusal malları ve sosyal minimumu da sağlayan sınırlı bir devlet",{y:2}],["Yalnız koruma, yargı ve savunma yapan bir tekel",{y:3}],["Örtüşen, rekabet eden yetki alanları",{y:4}],["Rakip koruma ajansları; devlet yok",{y:5}]]},
+{q:"Bir sosyal minimum (asgari gelir, temel yardım) hakkında?",o:[["Devletin işi değil; gönüllü yardımın işi",{y:3.5,f:{dog:1,apr:1,erd:1}}],["Kabul edilebilir, çünkü sonuçları iyidir",{y:2,f:{son:1,evr:1}}],["Adalet gereği: en kötü durumdakilere borçluyuz",{y:2,f:{ka:2,sol:1}}]]},
+{q:"Biri kendini gönüllü olarak köleliğe satarsa sözleşme geçerli mi?",o:[["Geçerli: kendine sahipsen kendini satabilirsin",{f:{dog:1,soz:1}}],["Geçersiz: irade devredilemez",{f:{dog:1,apr:1}}],["Geçersiz: özgür kurumların ön koşuluna aykırı",{f:{ka:1,erd:1}}]]},
+{q:"Barışçıl biri başka bir ülkeye yerleşmek isterse?",o:[["Engellenemez: sınırlar ilke olarak açık olmalı",{f:{sez:1,dog:1,son:1}}],["Toprak sahipleri ve topluluklar kimi kabul edeceğine kendisi karar vermeli",{y:4.5,f:{apr:2,cep:1}}],["Devlet, vatandaşları adına girişi denetleyebilir",{y:2.5,f:{soz:1,ka:1,evr:1}}]]},
+{q:"Demokrasinin değeri nedir?",o:[["Meşruiyetin kaynağıdır; kararları bağlayıcı kılar",{y:2,f:{ka:2}}],["Bir araçtır; işe yaradığı ölçüde değerlidir",{y:3,f:{son:1,evr:1}}],["Çoğunluğun azınlığı yönetmesidir; özgürlüğe tehdittir",{y:4.5,f:{apr:1,dog:1,cep:1}}]]},
+{q:"Bir yönetimden memnun değilsen en iyi çare hangisi?",o:[["Ses: oyunu değiştirmek, siyasete katılmak",{y:2,f:{ka:1}}],["Çıkış: başka bir yetki alanına taşınmak ya da başka bir yönetimi seçmek",{y:4,f:{son:1}}],["Hiçbir yönetime üye olmamak; korumayı kendin satın almak",{y:5,f:{dog:1,apr:1}}]]}
 ];
 // İddialar: kimlikler kalıcıdır. Paylaşım bağlantıları bu sıraya dayanır: YALNIZCA SONA EKLE, silme ya da yeniden sıralama yapma.
 const CL=[
@@ -540,9 +553,10 @@ document.getElementById("codeTable").innerHTML=[...T].sort((a,b)=>order.indexOf(
 const qs=document.getElementById("qs"),res=document.getElementById("result");
 const renderQ=()=>{qs.innerHTML=Q.map((q,i)=>`<fieldset><legend>${i+1}. ${esc(q.q)}</legend><div class="opt">${q.o.map((o,j)=>`<button type="button" id="q${i}o${j}" data-q="${i}" data-o="${j}" aria-pressed="${sel[i]===j}">${esc(o[0])}</button>`).join("")}</div></fieldset>`).join("")};
 const calc=()=>{
-let x=null,y=null,dy=0,sc={},n=0;
-sel.forEach((j,i)=>{if(j===null)return;n++;const v=Q[i].o[j][1];if(v.x!=null)x=v.x;if(v.y!=null)y=v.y;if(v.dy)dy+=v.dy;for(const k in v.f||{})sc[k]=(sc[k]||0)+v.f[k]});
-me=(x!=null&&y!=null)?{x,y:Math.min(5,Math.max(1,y+dy))}:null;
+let sc={},n=0;
+sel.forEach((j,i)=>{if(j===null)return;n++;const v=Q[i].o[j][1];for(const k in v.f||{})sc[k]=(sc[k]||0)+v.f[k]});
+const x=sel[0]===null?null:1,y=sel[4]===null?null:1;
+me=posOf(sel);
 const top=Object.entries(sc).sort((a,b)=>b[1]-a[1]);
 const [a,b,c,d,e,f,h]=sel,w=[];
 if(a===3&&b===0)w.push("Sonuçlara dayanan bir hak, felaket ölçeğindeki bir sonuç karşısında istisnasız kalamaz. İstisnasızlığı korumanın yolu Rule Consequentialism (Kural Sonuççuluğu), ama o zaman kuralın neden hiç esnemediği açıklanmalı.");
@@ -558,12 +572,17 @@ if(f===0&&e===1)w.push("Sosyal minimumu da sağlayan bir devlet seçtin, ama sos
 if(e===0&&d!==1)w.push("Mutlak egemen, liberteryen bir hak kuramıyla ancak Hobbes'un yolundan birleşir: düzenin kendisinin değerli olduğunu kabul etmek. 4. sorudaki seçimin bu değil.");
 if(a===3&&h===1)w.push("İradenin devredilemezliği (Rothbard) bir doğal hukuk tezidir; sonuççu bir temelden yalnızca “genellikle kötü sonuç verir” çıkar.");
 if(c===2&&h===0&&a===0)w.push("Tam öz-mülkiyet ile kaynakta eşit pay birlikte tutarlı (Steiner, Vallentyne); ama kendini satma hakkını tanımak, öz-mülkiyetin ne kadar “tam” olduğu sorusunu Cohen'in istediği yere taşır.");
+if(sel[7]===2&&d===2)w.push("Genel itaat ödevi yok diyorsun ama devletin girişi denetlemesini, yani barışçıl birinin zorla engellenmesini kabul ediyorsun. Bu zorlamanın gerekçesi ne olacak? (Huemer 2010)");
+if(sel[8]===0&&e===4)w.push("Demokrasiyi meşruiyetin kaynağı sayıyorsun ama devletsiz bir düzen seçtin. Rakip ajanslar arasında kim, neyi oylayacak?");
+if(sel[9]===1&&e===2)w.push("En iyi çare olarak çıkışı görüyorsun ama tek bir tekel seçtin. Çıkılacak başka bir yetki alanı yoksa çıkış göçe indirgenir (Tiebout, Somin).");
+if(sel[9]===2&&e!==null&&e<=2)w.push("Hiçbir yönetime üye olmamayı en iyi çare sayıyorsun ama bir devlet tekeli kabul ediyorsun: Spencer'ın “devleti görmezden gelme hakkı” ile Nozick'in baskın ajansı arasındaki gerilim.");
+if(sel[7]===1&&a===4)w.push("Toprak sahiplerinin dışlama hakkını mutlak sayıyorsun; ama haklar konvansiyondan geliyorsa, dışlama hakkı da yalnızca bugünkü kuralların öngördüğü kadardır.");
 let near=[];
 if(me){const t0=top[0]&&top[0][0],t1=top[1]&&top[1][0];near=[...T].map(t=>({t,d:Math.hypot(t.X-me.x,t.Y-me.y)-(t.f==t0?.6:0)-(t.f==t1?.3:0)})).sort((p,q)=>p.d-q.d).slice(0,3).map(o=>o.t)}
 const tf=top[0]?F[top[0][0]]:null,fa=top[0]?FA.find(v=>v.f==top[0][0]):null,tie=top[1]&&top[1][1]==top[0][1];
 let html="";
 if(!n)html=`<div class="big">Henüz seçim yok</div><p>Soruların hiçbiri bir aile adı içermiyor; her seçenek birden fazla aileye puan yazar. 1. ve 5. soruyu cevapladığında haritada kırmızı bir nokta belirir.</p>`;
-else{html=`<div class="fam" style="color:${tf?tf.c:"inherit"}">${tf?"Ağırlık merkezi: "+esc(tf.n):""}${tie?" ve "+esc(F[top[1][0]].n):""} · ${n}/7 soru</div>`;
+else{html=`<div class="fam" style="color:${tf?tf.c:"inherit"}">${tf?"Ağırlık merkezi: "+esc(tf.n):""}${tie?" ve "+esc(F[top[1][0]].n):""} · ${n}/${Q.length} soru</div>`;
 html+=me?`<div class="big">En yakın komşuların ${near.map(t=>esc(t.n)).join(", ")}</div>`:`<div class="big">Haritaya yerleşmek için ${x==null?"1.":""}${x==null&&y==null?" ve ":""}${y==null?"5.":""} soruyu cevapla</div>`;
 if(fa)html+=`<p><b>Devraldığın sorun:</b> ${esc(fa.b)}</p>`;
 html+=`<div class="warn">${w.length?w.map(t=>`<p class="t">${esc(t)}</p>`).join(""):"<p style=\"color:var(--mute)\">Seçimlerin arasında belirgin bir çelişki yok.</p>"}</div><button type="button" class="reset" id="reset">Seçimleri temizle</button>`}
@@ -592,16 +611,16 @@ sr.addEventListener("keydown",e=>{if(e.key=="Enter"){e.preventDefault();if(inner
 // ---- tavır, saklama, paylaşım, karşılaştırma ----
 const LS="lta3",MAXP=10;
 const save=()=>{try{localStorage.setItem(LS,JSON.stringify({sel,st,n:nick}))}catch(e){}};
-const load=()=>{try{const o=JSON.parse(localStorage.getItem(LS)||"null");if(o){if(Array.isArray(o.sel)&&o.sel.length==Q.length)sel=o.sel;if(o.st&&typeof o.st=="object")st=o.st;if(typeof o.n=="string")nick=o.n.slice(0,20)}}catch(e){}};
+const load=()=>{try{const o=JSON.parse(localStorage.getItem(LS)||"null");if(o){if(Array.isArray(o.sel))sel=Q.map((_,i)=>Number.isInteger(o.sel[i])&&o.sel[i]<Q[i].o.length?o.sel[i]:null);if(o.st&&typeof o.st=="object")st=o.st;if(typeof o.n=="string")nick=o.n.slice(0,20)}}catch(e){}};
 const b64e=u=>btoa(String.fromCharCode(...u)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
 const b64d=x=>{x=x.replace(/-/g,"+").replace(/_/g,"/");while(x.length%4)x+="=";return Uint8Array.from(atob(x),c=>c.charCodeAt(0))};
-const encode=(sa,so)=>{const bits=[],put=(v,n)=>{for(let i=n-1;i>=0;i--)bits.push((v>>i)&1)};put(1,8);sa.forEach(j=>put(j===null?0:j+1,3));CL.forEach(c=>put(so[c[0]]||0,2));const u=new Uint8Array(Math.ceil(bits.length/8));bits.forEach((b,i)=>{if(b)u[i>>3]|=128>>(i&7)});return b64e(u)};
-const decode=x=>{try{const u=b64d(x);let q=0;const get=n=>{let v=0;for(let i=0;i<n;i++){const bi=q++;v=(v<<1)|(((u[bi>>3]||0)>>(7-(bi&7)))&1)}return v};if(get(8)!==1)return null;const sa=Q.map(qq=>{const v=get(3);return v&&v<=qq.o.length?v-1:null});const so={};CL.forEach(c=>{const v=get(2);if(v)so[c[0]]=v});return{sel:sa,st:so}}catch(e){return null}};
-const posOf=sa=>{let x=null,y=null,dy=0;sa.forEach((j,i)=>{if(j===null)return;const v=Q[i].o[j][1];if(v.x!=null)x=v.x;if(v.y!=null)y=v.y;if(v.dy)dy+=v.dy});return x!=null&&y!=null?{x,y:Math.min(5,Math.max(1,y+dy))}:null};
+const encode=(sa,so)=>{const bits=[],put=(v,n)=>{for(let i=n-1;i>=0;i--)bits.push((v>>i)&1)};put(2,8);sa.forEach(j=>put(j===null?0:j+1,3));CL.forEach(c=>put(so[c[0]]||0,2));const u=new Uint8Array(Math.ceil(bits.length/8));bits.forEach((b,i)=>{if(b)u[i>>3]|=128>>(i&7)});return b64e(u)};
+const decode=x=>{try{const u=b64d(x);let q=0;const get=n=>{let v=0;for(let i=0;i<n;i++){const bi=q++;v=(v<<1)|(((u[bi>>3]||0)>>(7-(bi&7)))&1)}return v};const ver=get(8);if(ver!==1&&ver!==2)return null;const nq=ver==1?7:Q.length;const sa=Q.map((qq,i)=>{if(i>=nq)return null;const v=get(3);return v&&v<=qq.o.length?v-1:null});const so={};CL.forEach(c=>{const v=get(2);if(v)so[c[0]]=v});return{sel:sa,st:so}}catch(e){return null}};
+const posOf=sa=>{if(sa[0]==null||sa[4]==null)return null;let xs=0,xw=0,ys=0,yw=0;sa.forEach((j,i)=>{if(j==null||!Q[i])return;const v=Q[i].o[j][1];if(v.x!=null){const w=Q[i].wx||1;xs+=v.x*w;xw+=w}if(v.y!=null){const w=Q[i].wy||1;ys+=v.y*w;yw+=w}});return{x:Math.round(xs/xw*10)/10,y:Math.min(5,Math.max(1,Math.round(ys/yw*10)/10))}};
 const readHash=()=>{friends=[];const h=location.hash.slice(1);if(!h)return;const mine=encode(sel,st);h.split("&").forEach(kv=>{if(!kv.startsWith("p=")||friends.length>=MAXP)return;const [code,nm]=kv.slice(2).split("~");if(code===mine)return;const d=decode(code);if(!d)return;let n="Arkadaş "+(friends.length+1);try{if(nm)n=decodeURIComponent(nm).slice(0,20)||n}catch(e){}friends.push({...d,code,n})})};
 const link=()=>{const mine=encode(sel,st),parts=[`p=${mine}~${encodeURIComponent(nick||"ben")}`];friends.forEach(f=>{if(f.code!==mine&&parts.length<MAXP)parts.push(`p=${f.code}~${encodeURIComponent(f.n)}`)});return location.origin+location.pathname+"#"+parts.join("&")};
 const syncTV=()=>document.querySelectorAll(".tv").forEach(d=>{const v=st[d.dataset.c]||0;d.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.v===v)))});
-const QL=[["#kodlama","Kodlama ölçütleri: X ekseni"],["#deneyler","Düşünce deneyleri"],["#sorunlar","Açık sorunlar: ilk edinim"],["#kronoloji","Kronoloji: Huemer ve siyasi otorite"],["#sorunlar","Açık sorunlar: uygulama ve tekel"],["#kronoloji","Kronoloji: Freeman ve Tomasi"],["#elestiri","Dış eleştiriler: Freeman"]];
+const QL=[["#kodlama","Kodlama ölçütleri: X ekseni"],["#deneyler","Düşünce deneyleri"],["#sorunlar","Açık sorunlar: ilk edinim"],["#kronoloji","Kronoloji: Huemer ve siyasi otorite"],["#sorunlar","Açık sorunlar: uygulama ve tekel"],["#kronoloji","Kronoloji: Freeman ve Tomasi"],["#elestiri","Dış eleştiriler: Freeman"],["#sorunlar","Açık sorunlar: göç"],["#ceper","Çeper: neoreaksiyon"],["#kronoloji","Kronoloji: federalizm hattı"]];
 const goto=c=>{const i=c[1].indexOf(":"),k=c[1].slice(0,i),v=c[1].slice(i+1);let a=k=="t"?`<a href="#" data-show="${v}">Kartı aç</a>`:k=="f"?`<a href="#temeller">Temeller</a>`:k=="d"?`<a href="#deneyler">Düşünce deneyleri</a>`:`<a href="#sorunlar">Açık sorunlar</a>`;if(EM.some(e=>e.c==c[0]))a+=` · <a href="#em-${c[0]}">Ampirik not</a>`;return a};
 const li=(c,f)=>`<li>“${esc(c[2])}” <span class="tag">(${esc(srcLbl(c[1]))})</span><br>Sen: ${TV[st[c[0]]]} · ${esc(f.n)}: ${TV[f.st[c[0]]]}<br>${goto(c)}</li>`;
 const renderCmp=()=>{
@@ -619,21 +638,32 @@ if(opp.length)h+=`<div class="lbl">Zıt tavır aldığınız iddialar</div><ul>$
 if(unc.length)h+=`<div class="lbl">Belirsiz: birinizin emin olmadığı iddialar</div><ul>${unc.map(c=>li(c,f)).join("")}</ul>`;
 if(!dq.length&&!opp.length&&!unc.length)h+=`<p>Henüz ayrıştığınız bir cevap ya da tavır yok. Konum bulucuyu doldurup kartlardaki iddialara tavır aldıkça burası dolar.</p>`;
 return h+`</details>`}).join("")};
-document.addEventListener("click",e=>{const b=e.target.closest(".tv button");if(b){const cid=b.closest(".tv").dataset.c,v=+b.dataset.v;if(st[cid]===v)delete st[cid];else st[cid]=v;syncTV();save();renderCmp();return}const a=e.target.closest("[data-show]");if(a){e.preventDefault();if(fam&&T.find(t=>t.id==a.dataset.show).f!=fam){fam=null;renderF()}show(a.dataset.show);document.querySelector(".mapgrid").scrollIntoView({behavior:"smooth"})}});
+document.addEventListener("click",e=>{const b=e.target.closest(".tv button");if(b){const cid=b.closest(".tv").dataset.c,v=+b.dataset.v;if(st[cid]===v)delete st[cid];else st[cid]=v;syncTV();save();renderCmp();renderTVF();return}const a=e.target.closest("[data-show]");if(a){e.preventDefault();if(view!=="kesfet")setView("kesfet");if(fam&&T.find(t=>t.id==a.dataset.show).f!=fam){fam=null;renderF()}show(a.dataset.show);document.querySelector(".mapgrid").scrollIntoView({behavior:"smooth"})}});
 const nk=document.getElementById("nick"),cpm=document.getElementById("cpmsg");
 nk.addEventListener("input",()=>{nick=nk.value.slice(0,20);save();renderCmp()});
 document.getElementById("copy").addEventListener("click",()=>{const l=link(),lk=document.getElementById("lnk");lk.value=l;const fb=()=>{lk.focus();lk.select();cpm.textContent="Bağlantı seçildi, elle kopyala"};try{navigator.clipboard.writeText(l).then(()=>{cpm.textContent="Kopyalandı"},fb)}catch(err){fb()}});
 load();readHash();nk.value=nick;
 const renderBanner=()=>{document.getElementById("fbanner").innerHTML=friends.length?`<div class="fb"><b>${friends.map(f=>esc(f.n)).join(", ")} ile karşılaştırma bağlantısıyla açtın.</b> Konum bulucuyu doldur ve kartlardaki iddialara tavır al; karşılaştırma “Konumunu bul” bölümünün altında. <a href="#cmp">Karşılaştırmaya git</a></div>`:""};
 renderBanner();
-window.addEventListener("hashchange",()=>{if(!/(^#|&)p=/.test(location.hash))return;readHash();renderBanner();renderCmp();draw()});
+window.addEventListener("hashchange",()=>{if(!/(^#|&)p=/.test(location.hash)){const id=decodeURIComponent(location.hash.slice(1));if(id)goAnchor(id);return}readHash();renderBanner();renderCmp();draw()});
 const thb=document.getElementById("themeBtn"),mq=matchMedia("(prefers-color-scheme: dark)");
 const effTheme=()=>document.documentElement.dataset.theme||(mq.matches?"dark":"light");
 const thLbl=()=>{thb.textContent=effTheme()=="dark"?"Açık tema":"Koyu tema"};
 thLbl();
 thb.addEventListener("click",()=>{const n=effTheme()=="dark"?"light":"dark";document.documentElement.dataset.theme=n;try{localStorage.setItem("lta-theme",n)}catch(e){}thLbl()});
 if(mq.addEventListener)mq.addEventListener("change",thLbl);
-renderF();renderQ();calc();renderT();show(cur);syncTV();
+let view="kesfet",libLast="lib:temeller",tvF="all";
+const navEl=document.querySelector(".nav"),subnav=document.getElementById("subnav");
+const setView=(v,top)=>{if(v=="lib")v=libLast;if(v.startsWith("lib:"))libLast=v;view=v;document.querySelectorAll("[data-view]").forEach(el=>{el.hidden=el.dataset.view!==v});subnav.hidden=!v.startsWith("lib:");navEl.querySelectorAll(".tab").forEach(b=>{const g=b.dataset.go;b.setAttribute("aria-pressed",String(g==v||(g=="lib"&&v.startsWith("lib:"))))});if(v=="kesfet")draw();if(top)window.scrollTo({top:0})};
+navEl.addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;setView(b.dataset.go,true);b.focus()});
+const goAnchor=id=>{const el=document.getElementById(id);if(!el)return false;const sec=el.closest("[data-view]");if(sec&&sec.dataset.view!==view)setView(sec.dataset.view);el.scrollIntoView({block:"start"});return true};
+document.addEventListener("click",e=>{const a=e.target.closest('a[href^="#"]');if(!a||a.hasAttribute("data-show"))return;let id=a.getAttribute("href").slice(1);try{id=decodeURIComponent(id)}catch(err){}if(!id||id.startsWith("p="))return;if(goAnchor(id))e.preventDefault()});
+const TVG=[["t","Düşünürler"],["f","Temeller"],["d","Düşünce deneyleri"],["p","Açık sorunlar"]];
+const renderTVF=()=>{const n=Object.values(st).filter(Boolean).length;document.getElementById("tvprog").textContent=`Şu ana kadar ${n}/${CL.length} iddiada tavır aldın.`;document.getElementById("tvf").innerHTML=[["all","Hepsi"],["0","Cevaplanmamış"],["1","Katılıyorum"],["2","Katılmıyorum"],["3","Emin değilim"]].map(([k,l])=>`<button type="button" data-tf="${k}" aria-pressed="${tvF==k}">${l} (${k=="all"?CL.length:CL.filter(c=>(st[c[0]]||0)==+k).length})</button>`).join("")};
+const renderTVList=()=>{const pass=c=>tvF=="all"||(st[c[0]]||0)==+tvF;document.getElementById("tvlist").innerHTML=TVG.map(([k,l])=>{const cs=CL.filter(c=>c[1].startsWith(k+":")&&pass(c));return cs.length?`<h3 class="tvh">${l} (${cs.length})</h3><ul class="tvl">${cs.map(c=>`<li><p class="tvq">“${esc(c[2])}”</p><p class="tag">${esc(srcLbl(c[1]))} · ${goto(c)}</p>${tv(c[0],false)}</li>`).join("")}</ul>`:""}).join("")||"<p>Bu filtrede iddia yok.</p>"};
+document.getElementById("tvf").addEventListener("click",e=>{const b=e.target.closest("button[data-tf]");if(!b)return;tvF=b.dataset.tf;renderTVF();renderTVList();document.querySelector(`#tvf [data-tf="${tvF}"]`)?.focus()});
+renderF();renderQ();calc();renderT();show(cur);renderTVF();renderTVList();syncTV();
+setView("kesfet");{const h0=location.hash.slice(1);if(h0&&!/(^|&)p=/.test(h0)){let id=h0;try{id=decodeURIComponent(h0)}catch(err){}goAnchor(id)}}
 }
 </script>
 </body>
