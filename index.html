@@ -41,7 +41,7 @@ svg .ax{fill:var(--mute);font-size:12px}
 .tag{color:var(--mute);font-size:14px}
 .card .q{border-left:3px solid var(--line);padding-left:12px;margin:0}
 .card .q b,.kv b{display:block;font-size:13px;color:var(--mute);font-weight:500}
-.kv{font-size:14px;margin:0}
+.kv{font-size:14px;margin:0}.kv a{color:inherit}.stt{font-weight:600}
 .nav{display:flex;gap:6px;overflow-x:auto;padding:10px max(5vw,16px);border-bottom:1px solid var(--line);background:var(--bg)}
 .nav a{flex:none;color:var(--ink);text-decoration:none;font-size:14px;padding:10px 12px;border:1px solid var(--line)}
 @media(min-width:900px){.nav{position:sticky;top:0;z-index:2}}
@@ -118,7 +118,7 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 </header>
 
 <nav class="nav" aria-label="Bölümler">
-<a href="#kodlama">Kodlama</a><a href="#konum">Konumunu bul</a><a href="#temeller">Temeller</a><a href="#sorunlar">Açık sorunlar</a><a href="#deneyler">Düşünce deneyleri</a><a href="#kronoloji">Kronoloji</a><a href="#elestiri">Dış eleştiriler</a><a href="#ceper">Çeper</a><a href="#okuma">Okuma</a><a href="#yontem">Yöntem</a>
+<a href="#kodlama">Kodlama</a><a href="#konum">Konumunu bul</a><a href="#temeller">Temeller</a><a href="#sorunlar">Açık sorunlar</a><a href="#emprik">Emprik notlar</a><a href="#deneyler">Düşünce deneyleri</a><a href="#kronoloji">Kronoloji</a><a href="#elestiri">Dış eleştiriler</a><a href="#ceper">Çeper</a><a href="#okuma">Okuma</a><a href="#yontem">Yöntem</a>
 </nav>
 
 <section class="band" id="kodlama">
@@ -172,7 +172,15 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 </div>
 </section>
 
-<section class="band" id="deneyler">
+<section class="band" id="emprik">
+<div class="wrap">
+<h2>Emprik notlar</h2>
+<p class="sub">Bazı iddialar olgusal bir öncüle dayanır ve o öncül bugün sınanabilir. Not öncülü değerlendirir, ilkeyi değil: veri bir öncülü destekler ya da zayıflatır, ama bir normu çürütmez. ▲ destekleniyor · ◆ tartışmalı · ▼ aleyhte</p>
+<div class="grid" id="ems"></div>
+</div>
+</section>
+
+<section class="band" id="deneyler" style="background:var(--soft)">
 <div class="wrap">
 <h2>Düşünce deneyleri</h2>
 <p class="sub">Her deney bir sezgiyi seferber eder. Sorulacak soru: bu sezgi gerçekten iddia edilen sonucu mu destekliyor, yoksa başka bir şeyi mi?</p>
@@ -180,7 +188,7 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 </div>
 </section>
 
-<section class="band" id="kronoloji" style="background:var(--soft)">
+<section class="band" id="kronoloji">
 <div class="wrap">
 <h2>Tartışma kronolojisi</h2>
 <p class="sub">Kim kime, hangi eserde, ne cevap verdi.</p>
@@ -189,7 +197,7 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 </div>
 </section>
 
-<section class="band" id="elestiri">
+<section class="band" id="elestiri" style="background:var(--soft)">
 <div class="wrap">
 <h2>Dışarıdan eleştiriler</h2>
 <p>Seçim ölçütü iki koşul: her eleştiri liberteryen yapının <b>farklı bir katmanını</b> hedeflemeli ve literatürde liberteryenlerden <b>cevap almış</b> olmalı. Böylece aynı itirazın tekrarı yerine, temel, öz-mülkiyet, liberalizmle ilişki, mülkiyetin taban çizgisi, aile ve cinsiyet, ve özel tahakküm olmak üzere altı katman kapsanıyor. Rawls'ın kendisi ayrı kart almadı: Nozick'in Rawls'a cevabı deneylerde ve kronolojide, Rawlsçu eleştiri ise Freeman kartında.</p>
@@ -363,6 +371,73 @@ const Q=[
 {q:"Bir sosyal minimum (asgari gelir, temel yardım) hakkında?",o:[["Devletin işi değil; gönüllü yardımın işi",{dy:.2,f:{dog:1,apr:1,erd:1}}],["Kabul edilebilir, çünkü sonuçları iyidir",{f:{son:1,evr:1}}],["Adalet gereği: en kötü durumdakilere borçluyuz",{dy:-.4,f:{ka:2,sol:1}}]]},
 {q:"Biri kendini gönüllü olarak köleliğe satarsa sözleşme geçerli mi?",o:[["Geçerli: kendine sahipsen kendini satabilirsin",{f:{dog:1,soz:1}}],["Geçersiz: irade devredilemez",{f:{dog:1,apr:1}}],["Geçersiz: özgür kurumların ön koşuluna aykırı",{f:{ka:1,erd:1}}]]}
 ];
+// İddialar: kimlikler kalıcıdır. Paylaşım bağlantıları bu sıraya dayanır: YALNIZCA SONA EKLE, silme ya da yeniden sıralama yapma.
+const CL=[
+["c01","t:locke","Emeğini kattığın sahipsiz bir şey, başkalarına yeterince bırakıldığı sürece senin olur."],
+["c02","t:hume","Mülkiyet ve adalet doğal haklar değil, zamanla oluşmuş konvansiyonlardır."],
+["c03","t:smith","Kimsenin tasarlamadığı piyasa düzeni, bilinçli planlamadan daha fazla refah üretir."],
+["c04","t:bastiat","Yasanın birinden alıp diğerine vermesi, adı konmamış bir yağmadır."],
+["c05","t:molinari","Güvenlik de rekabetle üretilirse tekelden daha ucuz ve daha iyi olur."],
+["c06","t:mises","Piyasa fiyatları olmadan rasyonel ekonomik hesap yapılamaz."],
+["c07","t:hayek","Toplumdaki bilgi dağınıktır; hiçbir merkez onu planlamaya yetecek kadar toplayamaz."],
+["c08","t:mfriedman","Ekonomik özgürlük, siyasi özgürlüğün ön koşuludur."],
+["c09","t:dfriedman","Hukuk ve güvenlik, rakip özel ajanslarca sağlanabilir."],
+["c10","t:buchanan","Meşru kurallar, oybirliğine yakın bir rızayla seçilebilecek kurallardır."],
+["c11","t:gauthier","Ahlak, rasyonel bireylerin karşılıklı yarar için yaptığı bir anlaşmadır."],
+["c12","t:gaus","Zorlama, makul her bakış açısından kabul edilebilir bir gerekçe ister."],
+["c13","t:tomasi","Ekonomik özgürlükler de ifade ve vicdan özgürlüğü gibi temel özgürlüklerdir."],
+["c14","t:zwolinski","Koşulsuz temel gelir, mevcut refah devletinden daha liberteryen bir çözümdür."],
+["c15","t:hoppe","Öz-mülkiyeti tartışırken inkâr etmek kendi kendini çürütür."],
+["c16","t:hoppe","Monarşi, demokrasiden daha uzun vadeli düşünen bir yönetim üretir."],
+["c17","t:rand","Rasyonel bencillik bir erdemdir."],
+["c18","t:huemer","Bir bireye tanımadığımız zorlama hakkını devlete tanımak için iyi bir neden yoktur."],
+["c19","t:nozick","Haklar yan kısıttır: daha iyi bir sonuç için bile ihlal edilemez."],
+["c20","t:nozick","Emek gelirinin vergilendirilmesi, zorla çalıştırmayla aynı düzeydedir."],
+["c21","t:rothbard","Devlet, organize bir hırsızlıktır."],
+["c22","t:steiner","Herkesin doğal kaynakların değerinde eşit payı vardır."],
+["c23","t:george","Toprak rantı topluluğa aittir; tek vergi arazi değer vergisi olmalıdır."],
+["c24","t:hobbes","Bölünmez bir egemen olmadan hayat yalnız, yoksul, kötü, hayvanca ve kısa olur."],
+["c25","t:ostrom","Ortak kaynaklar, ne devletle ne özel mülkiyetle, kullanıcıların kendi kurallarıyla yönetilebilir."],
+["c26","t:yarvin","Devlet, hissedarlara ait bir şirket gibi yönetilmelidir."],
+["c27","t:stirner","Haklar bireyin üzerine konmuş hayaletlerdir; mülkiyet elinde tutabildiğindir."],
+["c28","t:spencer","Herkesin devleti görmezden gelme hakkı vardır."],
+["c29","f:son","Özgürlüğün en iyi savunusu, daha iyi sonuç vermesidir."],
+["c30","f:sol","Kimse dünyayı yaratmadı; bu yüzden kaynaklar üzerinde herkesin payı var."],
+["c31","d:Wilt Chamberlain","Adil bir başlangıçtan gönüllü transferlerle varılan dağılım adildir."],
+["c32","d:Deneyim makinesi","Deneyim makinesine bağlanmayı reddetmemiz, gerçekliği hazdan çok önemsediğimizi gösterir."],
+["c33","d:Köle masalı","Demokratik vergilendirme, kişinin hayatının bir kısmına başkalarının sahip olması demektir."],
+["c34","d:Domates suyu","Emeğini bir şeye karıştırmak, onu sahiplenmek için yeterli değildir."],
+["c35","d:Kanunsuz kahraman","Devlete gösterdiğimiz itaat bir ahlaki yanılsamadır."],
+["c36","d:Koruma ajanslarından devlete","Minimal devlet, kimsenin hakkını ihlal etmeden koruma ajanslarından doğabilir."],
+["c37","d:Kamp gezisi","Küçük ölçekte istediğimiz eşitlik ve topluluk, toplum ölçeğinde de istenebilir."],
+["c38","d:Göz piyangosu","Beden üzerindeki hak ile emek ürünü üzerindeki hak aynı güçtedir."],
+["c39","d:Başlangıç durumu","Adil ilkeler, toplumdaki yerini bilmeyen birinin seçeceği ilkelerdir."],
+["c40","p:Doğa durumu ve emprik veri","Devletler rızayla değil, fetih ve zorla kuruldu."],
+["c41","p:Doğa durumu ve emprik veri","İnsanlar ekonomik kararlarında çoğunlukla rasyonel bencil davranır."],
+["c42","p:Göç","Sınırları göçe açmak dünya gelirini büyük ölçüde artırır."],
+["c43","p:Uygulama ve tekel","Rakip koruma ajansları kartel kurmak yerine rekabet eder."],
+["c44","p:Çevre ve dışsallıklar","Mülkiyet hakları iyi tanımlanırsa dışsallıklar taraflar arasında pazarlıkla çözülür."]
+];
+// Emprik notlar: öncülü değerlendirir, ilkeyi değil. s: d=destekleniyor, t=tartışmalı, a=aleyhte
+const EM=[
+{c:"c06",o:"Merkezi planlı ekonomiler, piyasa fiyatı olmadan kaynakları sistematik olarak verimsiz dağıtır.",s:"d",a:"Sovyet tipi ekonomilerde süreğen kıtlık ve verimsizlik iyi belgelenmiştir; Kornai bunu tek tek hatalara değil, sistemin kurumsal özelliklerine bağlar. Bu, hesaplama argümanının olgusal yanını destekler. Bugünün hesaplama gücüyle planlamanın mümkün olup olmadığı ise ayrı ve açık bir sorudur.",k:"Kornai, The Socialist System, 1992"},
+{c:"c08",o:"Yüksek siyasi özgürlük, yüksek ekonomik özgürlük olmadan pek görülmez.",s:"d",a:"1970'ten bu yana 123 ülkeye kadar uzanan veride, yüksek siyasi özgürlüğü düşük ekonomik özgürlükle birleştiren toplum azdır. İlişkinin tersi ise tutmaz: ekonomik özgürlüğü yüksek, siyasi özgürlüğü sınırlı ülkeler vardır. Yani “gerekli koşul” okuması desteklenir, “yeterli koşul” okuması desteklenmez.",k:"Lawson ve Clark, Journal of Economic Behavior & Organization 74(3), 2010"},
+{c:"c29",o:"Piyasa yönelimli kurumlar ve politikalar ekonomik büyümeyi artırır.",s:"d",a:"Fraser ekonomik özgürlük endeksini kullanan çalışmaların eleştirel bir taraması, endeksin ciddi sorunlarına rağmen serbestleşmenin büyümeyi desteklediği sonucuna varır. Bu sonuççu savunuyu güçlendirir; ama sonuççu savunu tam da bu yüzden veriye bağlı kalır: büyüme dışındaki sonuçlar (eşitsizlik, istikrar) ayrıca hesaba girer.",k:"de Haan, Lundström ve Sturm, Journal of Economic Surveys 20(2), 2006"},
+{c:"c16",o:"Demokratikleşme, kısa vadecilik yüzünden ekonomik performansı kötüleştirir.",s:"a",a:"Ülke sabit etkileri ve demokratikleşme öncesi düşüş kontrol edildiğinde, demokratikleşme 25 yılda kişi başına GSYH'yi yaklaşık yüzde 20 artırır. Bu, Hoppe'nin zaman tercihi argümanından çıkan olgusal öngörüyle çelişir. Ancak çalışma demokrasiyi genel olarak demokrasi dışı rejimlerle karşılaştırır, özel olarak monarşiyle değil.",k:"Acemoglu, Naidu, Restrepo ve Robinson, Journal of Political Economy 127(1), 2019"},
+{c:"c24",o:"Devletsiz toplumlarda ölümcül şiddet, devletli toplumlardakinden çok daha yüksektir.",s:"t",a:"Memeli soyağacından tahmin edilen insan ölümcül şiddeti taban oranı yaklaşık yüzde 2'dir ve oran toplumsal örgütlenme biçimine göre büyük farklar gösterir (Gómez ve ark.). Göçebe toplayıcı bantlarda ölümlerin çoğu gruplar arası savaştan değil, kişisel anlaşmazlıklardan doğar (Fry ve Söderberg); bu çalışmanın yöntemi de eleştirildi. Hobbes'un yönü kısmen desteklenir, ölçeği tartışmalıdır.",k:"Gómez ve ark., Nature 538, 2016; Fry ve Söderberg, Science 341, 2013"},
+{c:"c40",o:"İlk devletler rızayla değil, zor ve fetihle ortaya çıktı.",s:"d",a:"Carneiro'nun çevresel sınırlanma kuramı ilk devletleri savaş ve fetihle açıklar; Scott ilk tarım devletlerini zorla vergi ve emek toplayan yapılar olarak anlatır. Bu, sözleşme kuramlarının tarihsel değil varsayımsal olduğunu hatırlatır. Varsayımsal bir sözleşmeyi ise tarih çürütmez.",k:"Carneiro, Science 169, 1970; Scott, Against the Grain, 2017"},
+{c:"c41",o:"İnsanlar ekonomik etkileşimde çoğunlukla yalnız kendi maddi çıkarını en çoklar.",s:"a",a:"On beş küçük ölçekli toplumda ultimatom oyununda ortalama teklifler yüzde 26 ile 58 arasında değişir; saf bencillik modeli hiçbirinde tutmaz (Henrich ve ark.). İnsanlar bedelini kendileri ödeyerek bile bedavacıları cezalandırır (Fehr ve Gächter). Bu, sözleşmeci ve iktisadi modellerdeki rasyonel egoist varsayımını zayıflatır.",k:"Henrich ve ark., American Economic Review 91(2), 2001; Fehr ve Gächter, Nature 415, 2002"},
+{c:"c25",o:"Kullanıcıların kendi geliştirdiği kurallar, ortak kaynakları sürdürülebilir biçimde yönetebilir.",s:"d",a:"Ostrom'un tasarım ilkelerini 91 çalışma üzerinden sınayan bir tarama, ilkelerin güçlü emprik destek gördüğü sonucuna varır; bazı kuramsal sorular açık kalır.",k:"Cox, Arnold ve Villamayor-Tomás, Ecology and Society 15(4), 2010"},
+{c:"c42",o:"Göç engellerini kaldırmak dünya gelirini büyük ölçüde artırır.",s:"t",a:"Tahminlere göre kazanç dünya GSYH'sinin büyük bir kesridir; mal ve sermaye akışındaki kalan engelleri kaldırmanın getirisinden bir iki büyüklük mertebesi fazladır. Ama bu tahminler modele dayanır ve göçmenlerin verimliliğinin hedef ülkede ne kadar artacağı varsayımına duyarlıdır.",k:"Clemens, Journal of Economic Perspectives 25(3), 2011"},
+{c:"c14",o:"Koşulsuz nakit desteği çalışmayı ciddi biçimde azaltmaz.",s:"t",a:"ABD'de üç yıl boyunca ayda 1.000 dolar alan düşük gelirlilerde işgücüne katılım 3,9 puan, çalışma süresi haftada 1–2 saat düştü; boşalan zaman çoğunlukla boş zamana gitti. Etki ılımlı: ne ihmal edilebilir ne de büyük. Temel gelirin liberteryen savunusu ayrıca bürokrasinin ve paternalizmin azalmasına dayanır; bunu bu deney ölçmez.",k:"Vivalt ve ark., NBER Working Paper 32719, 2024"},
+{c:"c23",o:"Arazi değer vergisi, ekonomik faaliyeti en az bozan vergidir.",s:"d",a:"Arazi arzı sabit olduğu için arazi değerinden alınan vergi, araziyi alma, geliştirme ya da kullanma teşvikini bozmaz. İngiltere'nin vergi sistemini inceleyen kapsamlı rapor bu gerekçeyle ticari mülk vergilerinin yerine arazi değer vergisi önerir. Değerin nasıl ölçüleceği pratik bir sorun olarak kalır.",k:"Mirrlees ve ark., Tax by Design, 2011"},
+{c:"c32",o:"Makineye bağlanmayı reddetmemiz, gerçekliğe verdiğimiz değerden gelir.",s:"t",a:"Katılımcılara zaten makinede oldukları söylendiğinde, önemli bir kısmı gerçek hayatına dönmek istemedi. Bu, sezginin bir bölümünün gerçekliğe değil statükoya bağlılıktan gelebileceğini düşündürür.",k:"De Brigard, Philosophical Psychology 23(1), 2010"},
+{c:"c35",o:"İnsanlar otoriteye, emrin içeriği yanlış olsa da itaat etme eğilimindedir.",s:"d",a:"Milgram deneyinin 2009'daki kısmi tekrarında katılımcıların yüzde 70'i 150 volt eşiğini geçmeye istekliydi; Milgram'ın karşılık gelen koşulunda oran yüzde 83'tü. Huemer bu tür bulguları otoritenin bir ahlaki yanılsama olduğu tezine destek olarak kullanır. Veri itaat eğilimini destekler; o itaatin meşru olup olmadığını söylemez.",k:"Burger, American Psychologist 64(1), 2009"},
+{c:"c43",o:"Özel koruma sağlayıcıları kartel ya da zorbalık kurmak yerine rekabet eder.",s:"t",a:"Leeson'a göre Somali'de devlet çöktükten sonra birçok kalkınma göstergesi devlet dönemine göre iyileşti. Öte yandan Sicilya mafyası, özel korumanın zorla dayatılan bir tekele dönüşebildiğinin klasik örneğidir (Gambetta). İkisi de anarko-kapitalist modelin tam bir sınaması değildir.",k:"Leeson, Journal of Comparative Economics 35(4), 2007; Gambetta, The Sicilian Mafia, 1993"},
+{c:"c44",o:"İşlem maliyeti düşükse taraflar dışsallığı pazarlıkla verimli biçimde çözer.",s:"t",a:"Laboratuvarda, az sayıda tarafın kolayca pazarlık yapabildiği koşullarda Coase'un öngörüsü büyük ölçüde doğrulandı. İklim gibi milyonlarca tarafı ve kuşakları ilgilendiren dışsallıklarda ise düşük olmayan şey tam da işlem maliyetidir.",k:"Hoffman ve Spitzer, Journal of Law and Economics 25(1), 1982"}
+];
+const ST={d:["▲","Destekleniyor"],t:["◆","Tartışmalı"],a:["▼","Aleyhte"]};
+const emh=id=>CL.filter(c=>c[1]=="t:"+id).map(c=>EM.find(e=>e.c==c[0])).filter(Boolean).map(e=>`<p class="kv"><b>Emprik not</b>${ST[e.s][0]} ${ST[e.s][1]}: ${esc(e.o)} <a href="#em-${e.c}">Nota git</a></p>`).join("");
 let sel=Q.map(()=>null),fam=null,cur="nozick",me=null;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const lvx=v=>Number.isInteger(v)?"X"+v+" "+LX[v]:"X"+Math.floor(v)+"–X"+Math.ceil(v);
@@ -389,7 +464,7 @@ s.innerHTML=g;
 };
 const show=id=>{
 cur=id;const t=T.find(v=>v.id==id),f=F[t.f];
-card.innerHTML=`<div class="fam" style="color:${f.c}">${esc(f.n)}${t.u?" · kodlama tartışmalı":""}</div><div class="who">${esc(t.n)}</div><div class="tag">${esc(t.w)}</div><p>${esc(t.d)}</p><p class="kv"><b>Kodlama</b>${esc(lvx(t.X))} · Y${t.Y} ${esc(LY[t.Y])}. ${esc(t.g)}</p>${t.rn?`<p class="kv"><b>Tek noktaya sığmıyor</b>${esc(t.rn)}</p>`:""}<p class="q" style="border-color:${f.c}"><b>En güçlü itiraz</b>${esc(t.k)}</p>`;
+card.innerHTML=`<div class="fam" style="color:${f.c}">${esc(f.n)}${t.u?" · kodlama tartışmalı":""}</div><div class="who">${esc(t.n)}</div><div class="tag">${esc(t.w)}</div><p>${esc(t.d)}</p><p class="kv"><b>Kodlama</b>${esc(lvx(t.X))} · Y${t.Y} ${esc(LY[t.Y])}. ${esc(t.g)}</p>${t.rn?`<p class="kv"><b>Tek noktaya sığmıyor</b>${esc(t.rn)}</p>`:""}<p class="q" style="border-color:${f.c}"><b>En güçlü itiraz</b>${esc(t.k)}</p>${emh(id)}`;
 draw();
 };
 const fl=document.getElementById("filters");
@@ -444,6 +519,8 @@ tlf.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return
 document.getElementById("crit").innerHTML=X.map(x=>`<article style="border-top-color:var(--ve)"><div class="lbl" style="margin:0">Hedeflediği katman: ${esc(x.lay)}</div><h3>${esc(x.n)}</h3><div class="tag">${esc(x.w)}</div><p>${esc(x.ar)}</p><div class="lbl">Liberteryen cevap</div><p>${esc(x.re)}</p></article>`).join("");
 document.getElementById("edge").innerHTML=E.map(e=>`<div><h3>${esc(e[0])}</h3><p>${esc(e[1])}</p></div>`).join("");
 document.getElementById("books").innerHTML=B.map(g=>`<div><h3>${esc(g[0])}</h3><ul>${g[1].map(b=>`<li>${esc(b[0])}, <i>${esc(b[1])}</i> <span class="y">${esc(b[2])}</span><span class="vf" title="${b[3]?"Künye web'de doğrulandı":"Standart künye, ayrıca doğrulanmadı"}">${b[3]?"✓":"○"}</span></li>`).join("")}</ul></div>`).join("");
+const srcLbl=x=>{const i=x.indexOf(":"),k=x.slice(0,i),v=x.slice(i+1);return k=="t"?T.find(t=>t.id==v).n:k=="f"?F[v].n:k=="d"?"Düşünce deneyi: "+v:"Açık sorun: "+v};
+document.getElementById("ems").innerHTML=EM.map(e=>{const c=CL.find(x=>x[0]==e.c);return `<article id="em-${e.c}"><div class="lbl" style="margin:0">${esc(srcLbl(c[1]))}</div><h3>“${esc(c[2])}”</h3><div class="lbl">Olgusal öncül</div><p>${esc(e.o)}</p><p class="stt">${ST[e.s][0]} ${ST[e.s][1]}</p><p>${esc(e.a)}</p><div class="lbl">Kaynak</div><p>${esc(e.k)}</p></article>`}).join("");
 const AL={rand:"Ayn Rand Objektivizm Objectivism",rdu:"Douglas Rasmussen Den Uyl neo-Aristotelesci",mfriedman:"Milton Friedman Chicago",dfriedman:"David Friedman ancap",mises:"Ludwig von Mises Avusturya",hayek:"Friedrich Hayek Avusturya",yarvin:"Curtis Yarvin Moldbug Nick Land neoreaksiyon",george:"Henry George Georgism",smith:"Adam Smith",hume:"David Hume",locke:"John Locke",hobbes:"Thomas Hobbes Leviathan",stirner:"Max Stirner egoizm",ostrom:"Elinor Ostrom",nozick:"Robert Nozick",rothbard:"Murray Rothbard ancap",buchanan:"James Buchanan Virginia",tomasi:"John Tomasi bleeding-heart",zwolinski:"Matt Zwolinski bleeding-heart",gaus:"Gerald Gaus",huemer:"Michael Huemer",spencer:"Herbert Spencer",bastiat:"Frederic Bastiat",molinari:"Gustave de Molinari"};
 const norm=v=>v.toLocaleLowerCase("tr").replace(/ı/g,"i").normalize("NFD").replace(/[\u0300-\u036f]/g,"");
 const sr=document.getElementById("search"),sm=document.getElementById("srchmsg");
