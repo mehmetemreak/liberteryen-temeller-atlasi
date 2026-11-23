@@ -168,6 +168,8 @@ tr:last-child td{border-bottom:none}
 .tvb button{min-height:36px;padding:0 12px;font-size:13px}
 .tvh{margin-top:24px;padding-bottom:6px;border-bottom:2px solid var(--line)}.tvl{list-style:none;padding:0;margin:0}.tvl li{border-bottom:1px solid var(--line);padding:14px 0}.tvl .tag a{color:inherit}
 
+.addf{margin-top:16px}.addf label{font-weight:600;font-size:14px}.addrow{display:flex;gap:8px;align-items:stretch}.addrow textarea{flex:1;min-width:0;font:14px/1.4 "IBM Plex Sans",sans-serif;padding:8px 12px;border:1px solid var(--line);border-radius:var(--rs);background:var(--surface);color:var(--ink);resize:vertical}.addrow .reset{margin-top:0}
+.rmf{float:right;font:500 12.5px "IBM Plex Sans",sans-serif;min-height:32px;padding:0 10px;margin-left:8px;border:1px solid var(--line);border-radius:var(--rs);background:var(--surface);color:var(--mute);cursor:pointer}.rmf:hover{color:var(--ink)}
 .share{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
 .share label{font-weight:600;font-size:14px}
 .share input,#lnk{font:14.5px "IBM Plex Sans",sans-serif;min-height:42px;padding:0 12px;border:1px solid var(--line);border-radius:var(--rs);background:var(--surface);color:var(--ink)}
@@ -270,7 +272,8 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line)}footer 
 <div class="result" id="result" aria-live="polite"></div>
 </div>
 <div id="tutar" class="tutar" aria-live="polite"></div>
-<div id="cmp"><h3>Paylaş ve karşılaştır</h3><p class="note" style="margin-top:0">Cevapların ve tavırların yalnız bu tarayıcıda saklanır, hiçbir sunucuya gitmez. Bağlantı onları kısa bir koda çevirir; açan kişi kendi sonucunu seninkiyle karşılaştırır. Bağlantıyı açan arkadaşın da kendi bağlantısını paylaşırsa, en fazla on kişi aynı haritada görünür. <span id="tvcount"></span></p><div class="share"><label for="nick">Takma ad</label><input id="nick" maxlength="20" placeholder="isteğe bağlı" autocomplete="off"><button type="button" id="copy" class="reset" style="margin-top:0">Bağlantıyı kopyala</button><span id="cpmsg" class="tag" aria-live="polite"></span></div><input id="lnk" readonly aria-label="Paylaşım bağlantısı"><div id="cmplist"></div></div>
+<div id="cmp"><h3>Paylaş ve karşılaştır</h3><p class="note" style="margin-top:0">Cevapların ve tavırların yalnız bu tarayıcıda saklanır, hiçbir sunucuya gitmez. Bağlantı onları kısa bir koda çevirir; açan kişi kendi sonucunu seninkiyle karşılaştırır. Bağlantıyı açan arkadaşın da kendi bağlantısını paylaşırsa, en fazla on kişi aynı haritada görünür. <span id="tvcount"></span></p><div class="share"><label for="nick">Takma ad</label><input id="nick" maxlength="20" placeholder="isteğe bağlı" autocomplete="off"><button type="button" id="copy" class="reset" style="margin-top:0">Bağlantıyı kopyala</button><span id="cpmsg" class="tag" aria-live="polite"></span></div><input id="lnk" readonly aria-label="Paylaşım bağlantısı">
+<div class="addf"><label for="addlnk">Arkadaşlarının bağlantılarını ya da kodlarını ekle</label><p class="note" style="margin:2px 0 6px">Herkes kendi “Bağlantıyı kopyala”sını gruba atsın; sen buraya yapıştır. Birden fazlasını aynı anda, boşluk ya da satır sonuyla ayırarak yapıştırabilirsin. Tam bağlantı da olur, yalnızca kod da.</p><div class="addrow"><textarea id="addlnk" rows="2" spellcheck="false" autocomplete="off"></textarea><button type="button" id="addbtn" class="reset">Ekle</button></div><p id="addmsg" class="tag" aria-live="polite"></p></div><div id="cmplist"></div></div>
 <details><summary>Puanlama nasıl işliyor?</summary><p>Her seçenek bir ya da daha fazla aileye 1–3 puan yazar. En yüksek puanlı aile “ağırlık merkezin” olarak gösterilir. En yakın düşünürler, haritadaki uzaklığa göre bulunur; en yüksek puanlı ailenin üyelerine 0,6, ikinci ailenin üyelerine 0,3 düzeylik yakınlık avantajı verilir. Noktanın yeri ağırlıklı bir ortalamadır. X'te 1. soru üç kat ağırlık taşır; 2., 3. ve 4. sorular birer kat ağırlıkla noktayı kaydırır. Y'de 5. soru üç kat ağırlık taşır; 3. sorudaki eşit pay seçeneği ile 4., 6., 8., 9. ve 10. sorular birer kat ağırlıkla kaydırır. Böylece tek bir cevap konumunu belirlemez. Bu bir test değil, bir ayna: sonuç, seçimlerinin hangi literatürle konuştuğunu gösterir.</p></details>
 </div>
 </section>
@@ -731,7 +734,7 @@ const both=CL.filter(c=>st[c[0]]&&f.st[c[0]]);
 const opp=both.filter(c=>{const a=st[c[0]],b=f.st[c[0]];return(a==1&&b==2)||(a==2&&b==1)});
 const unc=both.filter(c=>{const a=st[c[0]],b=f.st[c[0]];return a!=b&&(a==3||b==3)});
 const agr=both.filter(c=>st[c[0]]==f.st[c[0]]).length;
-let h=`<details class="cmpf"${friends.length<=2?" open":""}><summary><b>${fi+1} · Sen ve ${esc(f.n)}</b> <span class="tag">${dq.length} soruda farklı · ${opp.length} zıt tavır · ${unc.length} belirsiz · ${agr} aynı tavır${gerLbl(f)}</span></summary>`;
+let h=`<details class="cmpf"${friends.length<=2?" open":""}><summary><button type="button" class="rmf" data-rm="${fi}" aria-label="${esc(f.n)} karşılaştırmadan çıkar">Çıkar</button><b>${fi+1} · Sen ve ${esc(f.n)}</b> <span class="tag">${dq.length} soruda farklı · ${opp.length} zıt tavır · ${unc.length} belirsiz · ${agr} aynı tavır${gerLbl(f)}</span></summary>`;
 if(dq.length)h+=`<div class="lbl">Farklı cevapladığınız sorular</div><ul>${dq.map(i=>`<li><b>${esc(Q[i].q)}</b><br>Sen: ${esc(Q[i].o[sel[i]][0])}<br>${esc(f.n)}: ${esc(Q[i].o[f.sel[i]][0])}<br><a href="${QL[i][0]}">${esc(QL[i][1])}</a></li>`).join("")}</ul>`;
 if(opp.length)h+=`<div class="lbl">Zıt tavır aldığınız iddialar</div><ul>${opp.map(c=>li(c,f)).join("")}</ul>`;
 if(unc.length)h+=`<div class="lbl">Belirsiz: birinizin emin olmadığı iddialar</div><ul>${unc.map(c=>li(c,f)).join("")}</ul>`;
@@ -744,6 +747,19 @@ document.getElementById("copy").addEventListener("click",()=>{const l=link(),lk=
 load();readHash();nk.value=nick;
 const renderBanner=()=>{document.getElementById("fbanner").innerHTML=friends.length?`<div class="fb"><b>${friends.map((f,i)=>`(${i+1}) ${esc(f.n)}`).join(", ")} ile karşılaştırma bağlantısıyla açtın.</b> Haritadaki numaralı daireler arkadaşlarını gösterir; karşılaştırma “Konumunu bul” bölümünün altında. <a href="#cmp">Karşılaştırmaya git →</a></div>`:""};
 renderBanner();
+const syncURL=()=>{try{history.replaceState(history.state,"",friends.length?link():location.pathname)}catch(err){}};
+const addFriends=txt=>{const parts=[];(txt||"").split(/\s+/).filter(Boolean).forEach(tok=>{const m=tok.match(/p=[^&\s#]+/g);if(m)m.forEach(x=>parts.push(x.slice(2)));else parts.push(tok.replace(/^#/,""))});
+const mine=encode(sel,st);let added=[],bad=0,self=0,dup=0,full=0;
+parts.forEach(pt=>{const [code,nm]=pt.split("~");const d=decode(code||"");if(!d){bad++;return}if(code===mine){self++;return}let n="";try{n=nm?decodeURIComponent(nm).slice(0,20):""}catch(e){n=""}
+const same=friends.findIndex(f=>f.code===code);if(same>=0){dup++;return}
+const byName=n?friends.findIndex(f=>f.n===n):-1;const fr={...d,code,n:n||"Arkadaş "+(friends.length+1)};
+if(byName>=0){friends[byName]=fr;added.push(fr.n+" (güncellendi)");return}
+if(friends.length>=MAXP-1){full++;return}friends.push(fr);added.push(fr.n)});
+const msg=[];if(added.length)msg.push(`${added.length} kişi eklendi: ${added.join(", ")}.`);if(dup)msg.push(`${dup} kod zaten listedeydi.`);if(self)msg.push("Kendi kodun atlandı.");if(bad)msg.push(`${bad} parça okunamadı; bağlantının ya da kodun tamamını kopyaladığından emin ol.`);if(full)msg.push(`Liste dolu: sen dahil en fazla ${MAXP} kişi.`);
+document.getElementById("addmsg").textContent=msg.join(" ")||"Eklenecek bir şey bulunamadı.";
+if(added.length){renderBanner();renderCmp();draw();syncURL()}return added.length};
+document.getElementById("addbtn").addEventListener("click",()=>{const ta=document.getElementById("addlnk");if(addFriends(ta.value))ta.value=""});
+document.getElementById("cmplist").addEventListener("click",e=>{const b=e.target.closest(".rmf");if(!b)return;e.preventDefault();const i=+b.dataset.rm,n=friends[i]&&friends[i].n;friends.splice(i,1);renderBanner();renderCmp();draw();syncURL();document.getElementById("addmsg").textContent=n?`${n} çıkarıldı.`:""});
 window.addEventListener("hashchange",()=>{if(!/(^#|&)p=/.test(location.hash)){const id=decodeURIComponent(location.hash.slice(1));if(id)goAnchor(id);return}readHash();renderBanner();renderCmp();draw()});
 const thb=document.getElementById("themeBtn"),mq=matchMedia("(prefers-color-scheme: dark)");
 const effTheme=()=>document.documentElement.dataset.theme||(mq.matches?"dark":"light");
