@@ -231,7 +231,7 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line)}footer 
 <div class="mapgrid">
 <div>
 <div class="fig" aria-label="Düşünür haritası"><svg id="map" role="img" aria-label="Düşünürlerin iki eksenli haritası"></svg></div>
-<div class="legend"><span>● kodlama net</span><span>○ kodlama tartışmalı</span><span>– – iki kategori arasında</span><span>→ pozisyon zamanla değişti</span><span style="color:var(--ve)">● sen</span><span>◯ arkadaşların</span><span>Dar ekranda kalabalık hücrelerdeki isimler için noktaya dokun ya da ara</span></div>
+<div class="legend"><span>● kodlama net</span><span>○ kodlama tartışmalı</span><span>– – iki kategori arasında</span><span>→ pozisyon zamanla değişti</span><span style="color:var(--ve)">● sen</span><span>◯ arkadaşların</span><span><span style="color:var(--ve)">◯</span> iddiasına katıldığın düşünür · <span style="letter-spacing:-1px">◌</span> katılmadığın</span><span>Dar ekranda kalabalık hücrelerdeki isimler için noktaya dokun ya da ara</span></div>
 </div>
 <aside class="card" id="card" aria-live="polite"></aside>
 </div>
@@ -633,7 +633,11 @@ const at=k=>{const rt=k.endsWith("r"),dy=k[0]=="u"?-12:k[0]=="d"?14:0,ax=rt?l.x+
 for(const k of o){const c=at(k),bx=c.box;if(bx[0]<2||bx[2]>W-2||bx[1]<Tp+16&&bx[0]<L+(nw?24:130)||bx[1]<Tp||bx[3]>Tp+ih)continue;if(placed.some(q=>hit(q,[bx[0]-5,bx[1]-1,bx[2]+5,bx[3]+1])))continue;if(obst.some(q=>q.own!==l.own&&hit(q.b,bx)))continue;placed.push(bx);l.at=c;break}
 if(!l.at&&l.pri<=1&&!l.nf){l.at=at(o[0]);placed.push(l.at.box)}});
 const txt=l=>l&&l.at?`<text x="${l.at.ax}" y="${l.at.ay}" text-anchor="${l.at.an}"${l.cls?` class="${l.cls}"`:""} style="${l.sty||`font-weight:${l.bold?600:400}`}">${esc(l.txt)}</text>`:"";
-let dots="";dotsA.forEach(({t,X,Y,c,on,op,L})=>{dots+=`<g class="dot" tabindex="0" role="button" aria-label="${esc(t.n)}" data-id="${t.id}" opacity="${op}"><circle cx="${X}" cy="${Y}" r="16" fill="transparent"/><circle cx="${X}" cy="${Y}" r="10" fill="none" stroke="${on?c:"transparent"}" stroke-width="2"/><circle cx="${X}" cy="${Y}" r="5.5" fill="${t.u?"var(--soft)":c}" stroke="${c}" stroke-width="${t.u?2:0}"/>${txt(L)}</g>`});
+const TOWN={c31:"nozick",c32:"nozick",c33:"nozick",c34:"nozick",c36:"nozick",c35:"huemer"};
+const stOf={};CL.forEach(c=>{const v=st[c[0]];if(v!==1&&v!==2)return;const id=c[1].startsWith("t:")?c[1].slice(2):TOWN[c[0]];if(!id)return;const o=stOf[id]||(stOf[id]={a:0,d:0});if(v==1)o.a++;else o.d++});
+const ring=(id,X,Y)=>{const o=stOf[id];if(!o)return "";const k=o.a>o.d?"a":o.d>o.a?"d":"m";return k=="a"?`<circle cx="${X}" cy="${Y}" r="8.5" fill="none" stroke="var(--ve)" stroke-width="2"/>`:k=="d"?`<circle cx="${X}" cy="${Y}" r="8.5" fill="none" stroke="var(--mute)" stroke-width="1.5" stroke-dasharray="2 2"/>`:`<circle cx="${X}" cy="${Y}" r="8.5" fill="none" stroke="var(--ve)" stroke-width="1.5" stroke-dasharray="3 2"/>`};
+const ringLbl=id=>{const o=stOf[id];if(!o)return "";return o.a>o.d?", iddiasına katılıyorsun":o.d>o.a?", iddiasına katılmıyorsun":", iddialarına karışık tavır"};
+let dots="";dotsA.forEach(({t,X,Y,c,on,op,L})=>{dots+=`<g class="dot" tabindex="0" role="button" aria-label="${esc(t.n)}${ringLbl(t.id)}" data-id="${t.id}" opacity="${op}"><circle cx="${X}" cy="${Y}" r="16" fill="transparent"/><circle cx="${X}" cy="${Y}" r="10" fill="none" stroke="${on?c:"transparent"}" stroke-width="2"/>${ring(t.id,X,Y)}<circle cx="${X}" cy="${Y}" r="5.5" fill="${t.u?"var(--soft)":c}" stroke="${c}" stroke-width="${t.u?2:0}"/>${txt(L)}</g>`});
 g+=lines+labs.filter(l=>l.cls).map(l=>`<g opacity="${l.op}">${txt(l)}</g>`).join("")+dots;
 if(meP)g+=`<g><circle cx="${meP.x}" cy="${meP.y}" r="8" fill="var(--ve)" stroke="var(--soft)" stroke-width="3"/>${txt(labs.find(l=>l.own=="me"))}</g>`;
 frP.forEach(o=>{g+=`<g><circle cx="${o.x}" cy="${o.y}" r="8" fill="var(--soft)" stroke="var(--ink)" stroke-width="2"/><text x="${o.x}" y="${o.y+3.5}" text-anchor="middle" style="font-size:10px;font-weight:600;stroke-width:0">${o.no}</text>${txt(o.L)}</g>`});
@@ -740,7 +744,7 @@ if(opp.length)h+=`<div class="lbl">Zıt tavır aldığınız iddialar</div><ul>$
 if(unc.length)h+=`<div class="lbl">Belirsiz: birinizin emin olmadığı iddialar</div><ul>${unc.map(c=>li(c,f)).join("")}</ul>`;
 if(!dq.length&&!opp.length&&!unc.length)h+=`<p>Henüz ayrıştığınız bir cevap ya da tavır yok. Konum bulucuyu doldurup kartlardaki iddialara tavır aldıkça burası dolar.</p>`;
 return h+`</details>`}).join("")};
-document.addEventListener("click",e=>{const b=e.target.closest(".tv button");if(b){const cid=b.closest(".tv").dataset.c,v=+b.dataset.v;if(st[cid]===v)delete st[cid];else st[cid]=v;syncTV();save();renderCmp();renderTVF();renderTutar();return}const a=e.target.closest("[data-show]");if(a){e.preventDefault();remember(a);if(view!=="kesfet:harita")setView("kesfet:harita");if(fam&&T.find(t=>t.id==a.dataset.show).f!=fam){fam=null;renderF()}show(a.dataset.show);document.querySelector(".mapgrid").scrollIntoView({behavior:"smooth"})}});
+document.addEventListener("click",e=>{const b=e.target.closest(".tv button");if(b){const cid=b.closest(".tv").dataset.c,v=+b.dataset.v;if(st[cid]===v)delete st[cid];else st[cid]=v;syncTV();save();renderCmp();renderTVF();renderTutar();draw();return}const a=e.target.closest("[data-show]");if(a){e.preventDefault();remember(a);if(view!=="kesfet:harita")setView("kesfet:harita");if(fam&&T.find(t=>t.id==a.dataset.show).f!=fam){fam=null;renderF()}show(a.dataset.show);document.querySelector(".mapgrid").scrollIntoView({behavior:"smooth"})}});
 const nk=document.getElementById("nick"),cpm=document.getElementById("cpmsg");
 nk.addEventListener("input",()=>{nick=nk.value.slice(0,20);save();renderCmp()});
 document.getElementById("copy").addEventListener("click",()=>{const l=link(),lk=document.getElementById("lnk");lk.value=l;const fb=()=>{lk.focus();lk.select();cpm.textContent="Bağlantı seçildi, elle kopyala"};try{navigator.clipboard.writeText(l).then(()=>{cpm.textContent="Kopyalandı"},fb)}catch(err){fb()}});
