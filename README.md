@@ -7,3 +7,7 @@ Liberteryen siyaset felsefesinin temellerini, iç tartışmalarını ve çeperin
 - Temeller, açık sorunlar, düşünce deneyleri, tartışma kronolojisi, dış eleştiriler, okuma listesi
 
 Tek dosyalık bir HTML sayfası: `index.html` dosyasını tarayıcıda açmanız yeterli.
+
+## Lisans
+
+İçerik ve kod [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.tr) lisanslıdır: kaynak göstererek paylaşabilir ve uyarlayabilirsiniz.
