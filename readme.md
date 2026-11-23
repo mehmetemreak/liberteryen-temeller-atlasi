@@ -10,7 +10,7 @@
 | :--- | :--- |
 | **İki Eksenli Düşünür Haritası** | 37 düşünürü açık kodlama ölçütleriyle *(X: Hakların kaynağı, Y: Meşru zorlamanın kapsamı)* görselleştirir; Türkçe normalizasyonlu arama ve ekol filtrelemesi sunar. |
 | **7 Soruluk Konum Bulucu** | Verdiğin yanıtlara göre seni en yakın düşünürlerle eşleştirir, yanıtların arasındaki felsefi gerilimleri otomatik çelişki uyarılarıyla gösterir. |
-| **Sunucusuz Karşılaştırma** | Yanıtlarını URL hash'ine (`#p=...`) sıkıştırarak paylaşılabilir bağlantı üretir; en fazla 4 kişinin konumunu ve ayrıştığı soruları yan yana karşılaştırır. |
+| **Sunucusuz Karşılaştırma** | Yanıtlarını URL hash'ine (`#p=...`) sıkıştırarak paylaşılabilir bağlantı üretir; en fazla 10 kişinin konumunu ve ayrıştığı soruları yan yana karşılaştırır. |
 | **Felsefi Temeller ve Açık Sorunlar** | Her ekolün temel savunusunu, ana metnini, en güçlü itirazını ve ödediği kuramsal bedeli özetler. |
 | **Düşünce Deneyleri ve Ampirik Notlar** | İlgili düşünce deneylerini, olgusal öncülleri ve tartışmalı iddialara tavır alma kartlarını içerir. |
 | **Tartışma Kronolojisi ve Dış Eleştiriler** | Liberteryen düşüncenin tarihsel gelişimini dönem filtreleriyle takip etmeni, dış eleştirilere verilen yanıtları incelemeni sağlar. |

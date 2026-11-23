@@ -107,6 +107,7 @@ th{font-weight:600;color:var(--mute);font-size:13px}
 #lnk{width:100%;margin-top:8px}
 #cmp{margin-top:28px;border-top:2px solid var(--ink);padding-top:18px}
 .cmpf{border:1px solid var(--line);padding:16px;margin-top:14px;background:var(--bg)}
+.cmpf{overflow-wrap:anywhere}.cmpf summary{cursor:pointer;min-height:32px;padding:4px 0}
 .cmpf ul{padding-left:18px;margin:4px 0 10px}.cmpf li{margin-bottom:10px}
 .cmpf a,.tvs a,.fb a{color:inherit}
 .fb{border:2px solid var(--ve);padding:10px 14px;margin-top:16px}
@@ -170,7 +171,7 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 <div class="qs" id="qs"></div>
 <div class="result" id="result" aria-live="polite"></div>
 </div>
-<div id="cmp"><h3>Paylaş ve karşılaştır</h3><p class="note" style="margin-top:0">Cevapların ve tavırların yalnız bu tarayıcıda saklanır, hiçbir sunucuya gitmez. Bağlantı onları kısa bir koda çevirir; açan kişi kendi sonucunu seninkiyle karşılaştırır. Bağlantıyı açan arkadaşın da kendi bağlantısını paylaşırsa, en fazla dört kişi aynı haritada görünür. <span id="tvcount"></span></p><div class="share"><label for="nick">Takma ad</label><input id="nick" maxlength="20" placeholder="isteğe bağlı" autocomplete="off"><button type="button" id="copy" class="reset" style="margin-top:0">Bağlantıyı kopyala</button><span id="cpmsg" class="tag" aria-live="polite"></span></div><input id="lnk" readonly aria-label="Paylaşım bağlantısı"><div id="cmplist"></div></div>
+<div id="cmp"><h3>Paylaş ve karşılaştır</h3><p class="note" style="margin-top:0">Cevapların ve tavırların yalnız bu tarayıcıda saklanır, hiçbir sunucuya gitmez. Bağlantı onları kısa bir koda çevirir; açan kişi kendi sonucunu seninkiyle karşılaştırır. Bağlantıyı açan arkadaşın da kendi bağlantısını paylaşırsa, en fazla on kişi aynı haritada görünür. <span id="tvcount"></span></p><div class="share"><label for="nick">Takma ad</label><input id="nick" maxlength="20" placeholder="isteğe bağlı" autocomplete="off"><button type="button" id="copy" class="reset" style="margin-top:0">Bağlantıyı kopyala</button><span id="cpmsg" class="tag" aria-live="polite"></span></div><input id="lnk" readonly aria-label="Paylaşım bağlantısı"><div id="cmplist"></div></div>
 <details><summary>Puanlama nasıl işliyor?</summary><p>Her seçenek bir ya da daha fazla aileye 1–3 puan yazar. En yüksek puanlı aile “ağırlık merkezin” olarak gösterilir. En yakın düşünürler, haritadaki uzaklığa göre bulunur; en yüksek puanlı ailenin üyelerine 0,6, ikinci ailenin üyelerine 0,3 düzeylik yakınlık avantajı verilir. Soru 4 (itaat ödevi yok) noktayı devletsiz yöne 0,3, soru 6 (adalet gereği sosyal minimum) güçlü devlet yönüne 0,4 düzey kaydırır. Bu bir test değil, bir ayna: sonuç, seçimlerinin hangi literatürle konuştuğunu gösterir.</p></details>
 </div>
 </section>
@@ -508,18 +509,19 @@ if(show)labs.push(L0);
 dotsA.push({t,X,Y,c,on,op,L:show?L0:null})});
 const meP=me?{x:px(me.x),y:py(me.y)}:null;
 if(meP){obst.push({b:[meP.x-9,meP.y-9,meP.x+9,meP.y+9],own:"me"});labs.push({x:meP.x,y:meP.y,txt:"sen",sz:13,bold:1,pri:0,pref:me.x>=4?"l":"r",own:"me",d:13,sty:"fill:var(--ve);font-weight:600"})}
-const frP=friends.map(f=>{const m=posOf(f.sel);if(!m)return null;const o={x:px(m.x)+9,y:py(m.y)+9,f};obst.push({b:[o.x-8,o.y-8,o.x+8,o.y+8],own:"fr"+f.code});o.L={x:o.x,y:o.y,txt:f.n,sz:13,bold:1,pri:0,pref:m.x>=4?"l":"r",own:"fr"+f.code,d:12,sty:"font-weight:600"};labs.push(o.L);return o}).filter(Boolean);
+const fpos=friends.map(f=>posOf(f.sel)),fcnt={},fidx={};fpos.forEach((m,i)=>{if(m){const k=m.x+"|"+m.y;fidx[i]=fcnt[k]=(fcnt[k]||0);fcnt[k]++}});
+const frP=friends.map((f,i)=>{const m=fpos[i];if(!m)return null;const n=fcnt[m.x+"|"+m.y],a=-Math.PI/4+fidx[i]*2*Math.PI/n,r=n>1?13:0;const o={x:px(m.x)+9+r*Math.cos(a),y:py(m.y)+9+r*Math.sin(a),f,no:i+1};obst.push({b:[o.x-9,o.y-9,o.x+9,o.y+9],own:"fr"+i});o.L={x:o.x,y:o.y,txt:f.n,sz:13,bold:1,pri:0,nf:1,pref:m.x>=4?"l":"r",own:"fr"+i,d:12,sty:"font-weight:600"};labs.push(o.L);return o}).filter(Boolean);
 const hit=(p,q)=>p[0]<q[2]&&p[2]>q[0]&&p[1]<q[3]&&p[3]>q[1];
 const placed=[];
 labs.sort((p,q)=>p.pri-q.pri).forEach(l=>{const w=tw(l.txt,l.bold,l.sz),d=l.d,o=l.pref=="l"?["l","r","ul","dl","ur","dr"]:["r","l","ur","dr","ul","dl"];
 const at=k=>{const rt=k.endsWith("r"),dy=k[0]=="u"?-12:k[0]=="d"?14:0,ax=rt?l.x+d:l.x-d,ay=l.y+4+dy;return{ax,ay,an:rt?"start":"end",box:rt?[ax,ay-11,ax+w,ay+3]:[ax-w,ay-11,ax,ay+3]}};
 for(const k of o){const c=at(k),bx=c.box;if(bx[0]<2||bx[2]>W-2||bx[1]<Tp+16&&bx[0]<L+(nw?24:130)||bx[1]<Tp||bx[3]>Tp+ih)continue;if(placed.some(q=>hit(q,[bx[0]-5,bx[1]-1,bx[2]+5,bx[3]+1])))continue;if(obst.some(q=>q.own!==l.own&&hit(q.b,bx)))continue;placed.push(bx);l.at=c;break}
-if(!l.at&&l.pri<=1){l.at=at(o[0]);placed.push(l.at.box)}});
+if(!l.at&&l.pri<=1&&!l.nf){l.at=at(o[0]);placed.push(l.at.box)}});
 const txt=l=>l&&l.at?`<text x="${l.at.ax}" y="${l.at.ay}" text-anchor="${l.at.an}"${l.cls?` class="${l.cls}"`:""} style="${l.sty||`font-weight:${l.bold?600:400}`}">${esc(l.txt)}</text>`:"";
 let dots="";dotsA.forEach(({t,X,Y,c,on,op,L})=>{dots+=`<g class="dot" tabindex="0" role="button" aria-label="${esc(t.n)}" data-id="${t.id}" opacity="${op}"><circle cx="${X}" cy="${Y}" r="16" fill="transparent"/><circle cx="${X}" cy="${Y}" r="10" fill="none" stroke="${on?c:"transparent"}" stroke-width="2"/><circle cx="${X}" cy="${Y}" r="5.5" fill="${t.u?"var(--soft)":c}" stroke="${c}" stroke-width="${t.u?2:0}"/>${txt(L)}</g>`});
 g+=lines+labs.filter(l=>l.cls).map(l=>`<g opacity="${l.op}">${txt(l)}</g>`).join("")+dots;
 if(meP)g+=`<g><circle cx="${meP.x}" cy="${meP.y}" r="8" fill="var(--ve)" stroke="var(--soft)" stroke-width="3"/>${txt(labs.find(l=>l.own=="me"))}</g>`;
-frP.forEach(o=>{g+=`<g><circle cx="${o.x}" cy="${o.y}" r="7" fill="var(--soft)" stroke="var(--ink)" stroke-width="2.5"/>${txt(o.L)}</g>`});
+frP.forEach(o=>{g+=`<g><circle cx="${o.x}" cy="${o.y}" r="8" fill="var(--soft)" stroke="var(--ink)" stroke-width="2"/><text x="${o.x}" y="${o.y+3.5}" text-anchor="middle" style="font-size:10px;font-weight:600;stroke-width:0">${o.no}</text>${txt(o.L)}</g>`});
 s.innerHTML=g;
 };
 const show=id=>{
@@ -588,7 +590,7 @@ document.getElementById("names").innerHTML=T.map(t=>`<option value="${esc(t.n)}"
 sr.addEventListener("input",()=>{const q=norm(sr.value.trim());sm.textContent="";if(q.length<2)return;const t=T.find(t=>norm(t.n)==q)||T.find(t=>norm(t.n+" "+(AL[t.id]||"")).includes(q));if(!t){sm.textContent="Bulunamadı";return}if(fam&&t.f!=fam){fam=null;renderF()}show(t.id);sm.textContent=t.n+" seçildi"});
 sr.addEventListener("keydown",e=>{if(e.key=="Enter"){e.preventDefault();if(innerWidth<900)card.scrollIntoView({behavior:"smooth",block:"start"})}});
 // ---- tavır, saklama, paylaşım, karşılaştırma ----
-const LS="lta3";
+const LS="lta3",MAXP=10;
 const save=()=>{try{localStorage.setItem(LS,JSON.stringify({sel,st,n:nick}))}catch(e){}};
 const load=()=>{try{const o=JSON.parse(localStorage.getItem(LS)||"null");if(o){if(Array.isArray(o.sel)&&o.sel.length==Q.length)sel=o.sel;if(o.st&&typeof o.st=="object")st=o.st;if(typeof o.n=="string")nick=o.n.slice(0,20)}}catch(e){}};
 const b64e=u=>btoa(String.fromCharCode(...u)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
@@ -596,8 +598,8 @@ const b64d=x=>{x=x.replace(/-/g,"+").replace(/_/g,"/");while(x.length%4)x+="=";r
 const encode=(sa,so)=>{const bits=[],put=(v,n)=>{for(let i=n-1;i>=0;i--)bits.push((v>>i)&1)};put(1,8);sa.forEach(j=>put(j===null?0:j+1,3));CL.forEach(c=>put(so[c[0]]||0,2));const u=new Uint8Array(Math.ceil(bits.length/8));bits.forEach((b,i)=>{if(b)u[i>>3]|=128>>(i&7)});return b64e(u)};
 const decode=x=>{try{const u=b64d(x);let q=0;const get=n=>{let v=0;for(let i=0;i<n;i++){const bi=q++;v=(v<<1)|(((u[bi>>3]||0)>>(7-(bi&7)))&1)}return v};if(get(8)!==1)return null;const sa=Q.map(qq=>{const v=get(3);return v&&v<=qq.o.length?v-1:null});const so={};CL.forEach(c=>{const v=get(2);if(v)so[c[0]]=v});return{sel:sa,st:so}}catch(e){return null}};
 const posOf=sa=>{let x=null,y=null,dy=0;sa.forEach((j,i)=>{if(j===null)return;const v=Q[i].o[j][1];if(v.x!=null)x=v.x;if(v.y!=null)y=v.y;if(v.dy)dy+=v.dy});return x!=null&&y!=null?{x,y:Math.min(5,Math.max(1,y+dy))}:null};
-const readHash=()=>{friends=[];const h=location.hash.slice(1);if(!h)return;const mine=encode(sel,st);h.split("&").forEach(kv=>{if(!kv.startsWith("p=")||friends.length>=4)return;const [code,nm]=kv.slice(2).split("~");if(code===mine)return;const d=decode(code);if(!d)return;let n="Arkadaş "+(friends.length+1);try{if(nm)n=decodeURIComponent(nm).slice(0,20)||n}catch(e){}friends.push({...d,code,n})})};
-const link=()=>{const mine=encode(sel,st),parts=[`p=${mine}~${encodeURIComponent(nick||"ben")}`];friends.forEach(f=>{if(f.code!==mine&&parts.length<4)parts.push(`p=${f.code}~${encodeURIComponent(f.n)}`)});return location.origin+location.pathname+"#"+parts.join("&")};
+const readHash=()=>{friends=[];const h=location.hash.slice(1);if(!h)return;const mine=encode(sel,st);h.split("&").forEach(kv=>{if(!kv.startsWith("p=")||friends.length>=MAXP)return;const [code,nm]=kv.slice(2).split("~");if(code===mine)return;const d=decode(code);if(!d)return;let n="Arkadaş "+(friends.length+1);try{if(nm)n=decodeURIComponent(nm).slice(0,20)||n}catch(e){}friends.push({...d,code,n})})};
+const link=()=>{const mine=encode(sel,st),parts=[`p=${mine}~${encodeURIComponent(nick||"ben")}`];friends.forEach(f=>{if(f.code!==mine&&parts.length<MAXP)parts.push(`p=${f.code}~${encodeURIComponent(f.n)}`)});return location.origin+location.pathname+"#"+parts.join("&")};
 const syncTV=()=>document.querySelectorAll(".tv").forEach(d=>{const v=st[d.dataset.c]||0;d.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.v===v)))});
 const QL=[["#kodlama","Kodlama ölçütleri: X ekseni"],["#deneyler","Düşünce deneyleri"],["#sorunlar","Açık sorunlar: ilk edinim"],["#kronoloji","Kronoloji: Huemer ve siyasi otorite"],["#sorunlar","Açık sorunlar: uygulama ve tekel"],["#kronoloji","Kronoloji: Freeman ve Tomasi"],["#elestiri","Dış eleştiriler: Freeman"]];
 const goto=c=>{const i=c[1].indexOf(":"),k=c[1].slice(0,i),v=c[1].slice(i+1);let a=k=="t"?`<a href="#" data-show="${v}">Kartı aç</a>`:k=="f"?`<a href="#temeller">Temeller</a>`:k=="d"?`<a href="#deneyler">Düşünce deneyleri</a>`:`<a href="#sorunlar">Açık sorunlar</a>`;if(EM.some(e=>e.c==c[0]))a+=` · <a href="#em-${c[0]}">Ampirik not</a>`;return a};
@@ -605,18 +607,18 @@ const li=(c,f)=>`<li>“${esc(c[2])}” <span class="tag">(${esc(srcLbl(c[1]))})
 const renderCmp=()=>{
 document.getElementById("lnk").value=link();
 const n=Object.values(st).filter(Boolean).length;document.getElementById("tvcount").textContent=`Şu ana kadar ${n}/${CL.length} iddiada tavır aldın.`;
-document.getElementById("cmplist").innerHTML=friends.map(f=>{
+document.getElementById("cmplist").innerHTML=friends.map((f,fi)=>{
 const dq=Q.map((q,i)=>i).filter(i=>sel[i]!==null&&f.sel[i]!==null&&sel[i]!==f.sel[i]);
 const both=CL.filter(c=>st[c[0]]&&f.st[c[0]]);
 const opp=both.filter(c=>{const a=st[c[0]],b=f.st[c[0]];return(a==1&&b==2)||(a==2&&b==1)});
 const unc=both.filter(c=>{const a=st[c[0]],b=f.st[c[0]];return a!=b&&(a==3||b==3)});
 const agr=both.filter(c=>st[c[0]]==f.st[c[0]]).length;
-let h=`<article class="cmpf"><h3>Sen ve ${esc(f.n)}</h3><p class="tag">${dq.length} soruda farklı cevap · ${opp.length} iddiada zıt tavır · ${unc.length} belirsiz · ${agr} iddiada aynı tavır</p>`;
+let h=`<details class="cmpf"${friends.length<=2?" open":""}><summary><b>${fi+1} · Sen ve ${esc(f.n)}</b> <span class="tag">${dq.length} soruda farklı · ${opp.length} zıt tavır · ${unc.length} belirsiz · ${agr} aynı tavır</span></summary>`;
 if(dq.length)h+=`<div class="lbl">Farklı cevapladığınız sorular</div><ul>${dq.map(i=>`<li><b>${esc(Q[i].q)}</b><br>Sen: ${esc(Q[i].o[sel[i]][0])}<br>${esc(f.n)}: ${esc(Q[i].o[f.sel[i]][0])}<br><a href="${QL[i][0]}">${esc(QL[i][1])}</a></li>`).join("")}</ul>`;
 if(opp.length)h+=`<div class="lbl">Zıt tavır aldığınız iddialar</div><ul>${opp.map(c=>li(c,f)).join("")}</ul>`;
 if(unc.length)h+=`<div class="lbl">Belirsiz: birinizin emin olmadığı iddialar</div><ul>${unc.map(c=>li(c,f)).join("")}</ul>`;
 if(!dq.length&&!opp.length&&!unc.length)h+=`<p>Henüz ayrıştığınız bir cevap ya da tavır yok. Konum bulucuyu doldurup kartlardaki iddialara tavır aldıkça burası dolar.</p>`;
-return h+`</article>`}).join("")};
+return h+`</details>`}).join("")};
 document.addEventListener("click",e=>{const b=e.target.closest(".tv button");if(b){const cid=b.closest(".tv").dataset.c,v=+b.dataset.v;if(st[cid]===v)delete st[cid];else st[cid]=v;syncTV();save();renderCmp();return}const a=e.target.closest("[data-show]");if(a){e.preventDefault();if(fam&&T.find(t=>t.id==a.dataset.show).f!=fam){fam=null;renderF()}show(a.dataset.show);document.querySelector(".mapgrid").scrollIntoView({behavior:"smooth"})}});
 const nk=document.getElementById("nick"),cpm=document.getElementById("cpmsg");
 nk.addEventListener("input",()=>{nick=nk.value.slice(0,20);save();renderCmp()});
