@@ -111,6 +111,7 @@ th{font-weight:600;color:var(--mute);font-size:13px}
 .cmpf ul{padding-left:18px;margin:4px 0 10px}.cmpf li{margin-bottom:10px}
 .cmpf a,.tvs a,.fb a{color:inherit}
 .fb{border:2px solid var(--ve);padding:10px 14px;margin-top:16px}
+.backbtn{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;z-index:5;max-width:calc(100% - 32px);font:600 14px "IBM Plex Sans",sans-serif;min-height:44px;padding:0 18px;border:2px solid var(--ve);border-radius:22px;background:var(--bg);color:var(--ink);cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.25);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 @media(max-width:900px){.mapgrid,.finder{grid-template-columns:minmax(0,1fr)}.result{position:static}}
 @media(max-width:600px){.fig{min-height:480px}.opt{grid-template-columns:minmax(0,1fr)}.probs article{grid-template-columns:minmax(0,1fr)}.tl li{grid-template-columns:minmax(0,1fr)}}
@@ -264,6 +265,7 @@ footer{font-size:14px;color:var(--mute)}footer a{color:inherit}
 </div>
 </section>
 
+<button type="button" id="backbtn" class="backbtn" hidden></button>
 <footer class="band"><div class="wrap">Liberteryen Temeller Atlası · sürüm 3 · Kasım 2026 · İçerik <a href="https://creativecommons.org/licenses/by/4.0/deed.tr">CC BY 4.0</a> lisanslıdır.</div></footer>
 
 <script>
@@ -638,7 +640,7 @@ if(opp.length)h+=`<div class="lbl">Zıt tavır aldığınız iddialar</div><ul>$
 if(unc.length)h+=`<div class="lbl">Belirsiz: birinizin emin olmadığı iddialar</div><ul>${unc.map(c=>li(c,f)).join("")}</ul>`;
 if(!dq.length&&!opp.length&&!unc.length)h+=`<p>Henüz ayrıştığınız bir cevap ya da tavır yok. Konum bulucuyu doldurup kartlardaki iddialara tavır aldıkça burası dolar.</p>`;
 return h+`</details>`}).join("")};
-document.addEventListener("click",e=>{const b=e.target.closest(".tv button");if(b){const cid=b.closest(".tv").dataset.c,v=+b.dataset.v;if(st[cid]===v)delete st[cid];else st[cid]=v;syncTV();save();renderCmp();renderTVF();return}const a=e.target.closest("[data-show]");if(a){e.preventDefault();if(view!=="kesfet")setView("kesfet");if(fam&&T.find(t=>t.id==a.dataset.show).f!=fam){fam=null;renderF()}show(a.dataset.show);document.querySelector(".mapgrid").scrollIntoView({behavior:"smooth"})}});
+document.addEventListener("click",e=>{const b=e.target.closest(".tv button");if(b){const cid=b.closest(".tv").dataset.c,v=+b.dataset.v;if(st[cid]===v)delete st[cid];else st[cid]=v;syncTV();save();renderCmp();renderTVF();return}const a=e.target.closest("[data-show]");if(a){e.preventDefault();remember(a);if(view!=="kesfet")setView("kesfet");if(fam&&T.find(t=>t.id==a.dataset.show).f!=fam){fam=null;renderF()}show(a.dataset.show);document.querySelector(".mapgrid").scrollIntoView({behavior:"smooth"})}});
 const nk=document.getElementById("nick"),cpm=document.getElementById("cpmsg");
 nk.addEventListener("input",()=>{nick=nk.value.slice(0,20);save();renderCmp()});
 document.getElementById("copy").addEventListener("click",()=>{const l=link(),lk=document.getElementById("lnk");lk.value=l;const fb=()=>{lk.focus();lk.select();cpm.textContent="Bağlantı seçildi, elle kopyala"};try{navigator.clipboard.writeText(l).then(()=>{cpm.textContent="Kopyalandı"},fb)}catch(err){fb()}});
@@ -657,11 +659,17 @@ const navEl=document.querySelector(".nav"),subnav=document.getElementById("subna
 const setView=(v,top)=>{if(v=="lib")v=libLast;if(v.startsWith("lib:"))libLast=v;view=v;document.querySelectorAll("[data-view]").forEach(el=>{el.hidden=el.dataset.view!==v});subnav.hidden=!v.startsWith("lib:");navEl.querySelectorAll(".tab").forEach(b=>{const g=b.dataset.go;b.setAttribute("aria-pressed",String(g==v||(g=="lib"&&v.startsWith("lib:"))))});if(v=="kesfet")draw();if(top)window.scrollTo({top:0})};
 navEl.addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;setView(b.dataset.go,true);b.focus()});
 const goAnchor=id=>{const el=document.getElementById(id);if(!el)return false;const sec=el.closest("[data-view]");if(sec&&sec.dataset.view!==view)setView(sec.dataset.view);el.scrollIntoView({block:"start"});return true};
-document.addEventListener("click",e=>{const a=e.target.closest('a[href^="#"]');if(!a||a.hasAttribute("data-show"))return;let id=a.getAttribute("href").slice(1);try{id=decodeURIComponent(id)}catch(err){}if(!id||id.startsWith("p="))return;if(goAnchor(id))e.preventDefault()});
+document.addEventListener("click",e=>{const a=e.target.closest('a[href^="#"]');if(!a||a.hasAttribute("data-show"))return;let id=a.getAttribute("href").slice(1);try{id=decodeURIComponent(id)}catch(err){}if(!id||id.startsWith("p=")||!document.getElementById(id))return;e.preventDefault();remember(a);goAnchor(id)});
 const TVG=[["t","Düşünürler"],["f","Temeller"],["d","Düşünce deneyleri"],["p","Açık sorunlar"]];
 const renderTVF=()=>{const n=Object.values(st).filter(Boolean).length;document.getElementById("tvprog").textContent=`Şu ana kadar ${n}/${CL.length} iddiada tavır aldın.`;document.getElementById("tvf").innerHTML=[["all","Hepsi"],["0","Cevaplanmamış"],["1","Katılıyorum"],["2","Katılmıyorum"],["3","Emin değilim"]].map(([k,l])=>`<button type="button" data-tf="${k}" aria-pressed="${tvF==k}">${l} (${k=="all"?CL.length:CL.filter(c=>(st[c[0]]||0)==+k).length})</button>`).join("")};
 const renderTVList=()=>{const pass=c=>tvF=="all"||(st[c[0]]||0)==+tvF;document.getElementById("tvlist").innerHTML=TVG.map(([k,l])=>{const cs=CL.filter(c=>c[1].startsWith(k+":")&&pass(c));return cs.length?`<h3 class="tvh">${l} (${cs.length})</h3><ul class="tvl">${cs.map(c=>`<li><p class="tvq">“${esc(c[2])}”</p><p class="tag">${esc(srcLbl(c[1]))} · ${goto(c)}</p>${tv(c[0],false)}</li>`).join("")}</ul>`:""}).join("")||"<p>Bu filtrede iddia yok.</p>"};
 document.getElementById("tvf").addEventListener("click",e=>{const b=e.target.closest("button[data-tf]");if(!b)return;tvF=b.dataset.tf;renderTVF();renderTVList();document.querySelector(`#tvf [data-tf="${tvF}"]`)?.focus()});
+const SECN={header:"Harita",konum:"Konumunu bul",tavirlar:"Tavırların",temeller:"Temeller",sorunlar:"Açık sorunlar",emprik:"Ampirik notlar",deneyler:"Düşünce deneyleri",kronoloji:"Kronoloji",elestiri:"Dış eleştiriler",ceper:"Çeper",okuma:"Okuma listesi",yontem:"Yöntem",kodlama:"Kodlama"};
+const navStack=[],bb=document.getElementById("backbtn");
+const updBack=()=>{const t=navStack[navStack.length-1];bb.hidden=!t;if(t)bb.textContent=`← ${t.label} bölümüne dön`};
+const remember=el=>{const sec=el.closest("section[id]"),id=sec?sec.id:(el.closest("header")?"header":"");navStack.push({view,y:scrollY,el,label:SECN[id]||"Önceki yer"});try{history.pushState({lta:navStack.length},"")}catch(err){}updBack()};
+bb.addEventListener("click",()=>{try{history.back()}catch(err){window.dispatchEvent(new PopStateEvent("popstate"))}});
+window.addEventListener("popstate",()=>{const t=navStack.pop();if(!t)return;setView(t.view);window.scrollTo(0,t.y);if(t.el.isConnected)t.el.focus({preventScroll:true});updBack()});
 renderF();renderQ();calc();renderT();show(cur);renderTVF();renderTVList();syncTV();
 setView("kesfet");{const h0=location.hash.slice(1);if(h0&&!/(^|&)p=/.test(h0)){let id=h0;try{id=decodeURIComponent(h0)}catch(err){}goAnchor(id)}}
 }
