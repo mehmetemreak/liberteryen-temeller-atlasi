@@ -2,7 +2,7 @@
 
 Liberteryen siyaset felsefesinin temellerini, iç tartışmalarını ve çeperindeki fikirleri gösteren interaktif bir referans sayfası (Türkçe).
 
-- 31 düşünürü iki eksende (hakların kaynağı, meşru zorlamanın kapsamı) açık kodlama ölçütleriyle yerleştiren harita
+- 37 düşünürü iki eksende (hakların kaynağı, meşru zorlamanın kapsamı) açık kodlama ölçütleriyle yerleştiren harita
 - Konum bulucu: yedi soru, gerekçeli çelişki uyarıları
 - Temeller, açık sorunlar, düşünce deneyleri, tartışma kronolojisi, dış eleştiriler, okuma listesi
 
