@@ -154,6 +154,9 @@ tr:last-child td{border-bottom:none}
 .y{color:var(--mute);white-space:nowrap}
 .vf{font-size:12px;color:var(--mute);margin-left:4px}
 .note{font-size:14px;color:var(--mute);margin-top:14px}
+.tutar{margin-top:32px;border-top:1px solid var(--line);padding-top:24px}.tutar .tag a,.gr a{color:inherit}
+.gr{border:1px solid var(--line);border-left:4px solid var(--ve);border-radius:var(--r);background:var(--surface);padding:16px 18px;margin-top:14px}.gr p{margin:0 0 6px}.gr .pair{font-weight:500}
+.trl{padding-left:20px;font-size:14.5px}.trl li{margin-bottom:10px}
 .sub a{color:inherit;text-underline-offset:3px}
 
 /* Stances & Share */
@@ -264,6 +267,7 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line)}footer 
 <div class="qs" id="qs"></div>
 <div class="result" id="result" aria-live="polite"></div>
 </div>
+<div id="tutar" class="tutar" aria-live="polite"></div>
 <div id="cmp"><h3>Paylaş ve karşılaştır</h3><p class="note" style="margin-top:0">Cevapların ve tavırların yalnız bu tarayıcıda saklanır, hiçbir sunucuya gitmez. Bağlantı onları kısa bir koda çevirir; açan kişi kendi sonucunu seninkiyle karşılaştırır. Bağlantıyı açan arkadaşın da kendi bağlantısını paylaşırsa, en fazla on kişi aynı haritada görünür. <span id="tvcount"></span></p><div class="share"><label for="nick">Takma ad</label><input id="nick" maxlength="20" placeholder="isteğe bağlı" autocomplete="off"><button type="button" id="copy" class="reset" style="margin-top:0">Bağlantıyı kopyala</button><span id="cpmsg" class="tag" aria-live="polite"></span></div><input id="lnk" readonly aria-label="Paylaşım bağlantısı"><div id="cmplist"></div></div>
 <details><summary>Puanlama nasıl işliyor?</summary><p>Her seçenek bir ya da daha fazla aileye 1–3 puan yazar. En yüksek puanlı aile “ağırlık merkezin” olarak gösterilir. En yakın düşünürler, haritadaki uzaklığa göre bulunur; en yüksek puanlı ailenin üyelerine 0,6, ikinci ailenin üyelerine 0,3 düzeylik yakınlık avantajı verilir. Noktanın yeri ağırlıklı bir ortalamadır. X'te 1. soru üç kat ağırlık taşır; 2., 3. ve 4. sorular birer kat ağırlıkla noktayı kaydırır. Y'de 5. soru üç kat ağırlık taşır; 3. sorudaki eşit pay seçeneği ile 4., 6., 8., 9. ve 10. sorular birer kat ağırlıkla kaydırır. Böylece tek bir cevap konumunu belirlemez. Bu bir test değil, bir ayna: sonuç, seçimlerinin hangi literatürle konuştuğunu gösterir.</p></details>
 </div>
@@ -679,7 +683,7 @@ else{html=`<div class="fam" style="color:${tf?tf.c:"inherit"}">${tf?"Ağırlık 
 html+=me?`<div class="big">En yakın komşuların ${near.map(t=>esc(t.n)).join(", ")}</div><p><a href="#map">Haritada konumunu gör →</a></p>`:`<div class="big">Haritaya yerleşmek için ${x==null?"1.":""}${x==null&&y==null?" ve ":""}${y==null?"5.":""} soruyu cevapla</div>`;
 if(fa)html+=`<p><b>Devraldığın sorun:</b> ${esc(fa.b)}</p>`;
 html+=`<div class="warn">${w.length?w.map(t=>`<p class="t">${esc(t)}</p>`).join(""):"<p style=\"color:var(--mute)\">Seçimlerin arasında belirgin bir çelişki yok.</p>"}</div><button type="button" class="reset" id="reset">Seçimleri temizle</button>`}
-res.innerHTML=html;draw();save();renderCmp();
+res.innerHTML=html;draw();save();renderCmp();if(typeof renderTutar=="function")renderTutar();
 };
 qs.addEventListener("click",e=>{const b=e.target.closest("button[data-q]");if(!b)return;const i=+b.dataset.q,j=+b.dataset.o;sel[i]=sel[i]===j?null:j;renderQ();calc();document.getElementById(b.id)?.focus()});
 res.addEventListener("click",e=>{if(e.target.id=="reset"){sel=Q.map(()=>null);renderQ();calc()}});
@@ -725,13 +729,13 @@ const both=CL.filter(c=>st[c[0]]&&f.st[c[0]]);
 const opp=both.filter(c=>{const a=st[c[0]],b=f.st[c[0]];return(a==1&&b==2)||(a==2&&b==1)});
 const unc=both.filter(c=>{const a=st[c[0]],b=f.st[c[0]];return a!=b&&(a==3||b==3)});
 const agr=both.filter(c=>st[c[0]]==f.st[c[0]]).length;
-let h=`<details class="cmpf"${friends.length<=2?" open":""}><summary><b>${fi+1} · Sen ve ${esc(f.n)}</b> <span class="tag">${dq.length} soruda farklı · ${opp.length} zıt tavır · ${unc.length} belirsiz · ${agr} aynı tavır</span></summary>`;
+let h=`<details class="cmpf"${friends.length<=2?" open":""}><summary><b>${fi+1} · Sen ve ${esc(f.n)}</b> <span class="tag">${dq.length} soruda farklı · ${opp.length} zıt tavır · ${unc.length} belirsiz · ${agr} aynı tavır${gerLbl(f)}</span></summary>`;
 if(dq.length)h+=`<div class="lbl">Farklı cevapladığınız sorular</div><ul>${dq.map(i=>`<li><b>${esc(Q[i].q)}</b><br>Sen: ${esc(Q[i].o[sel[i]][0])}<br>${esc(f.n)}: ${esc(Q[i].o[f.sel[i]][0])}<br><a href="${QL[i][0]}">${esc(QL[i][1])}</a></li>`).join("")}</ul>`;
 if(opp.length)h+=`<div class="lbl">Zıt tavır aldığınız iddialar</div><ul>${opp.map(c=>li(c,f)).join("")}</ul>`;
 if(unc.length)h+=`<div class="lbl">Belirsiz: birinizin emin olmadığı iddialar</div><ul>${unc.map(c=>li(c,f)).join("")}</ul>`;
 if(!dq.length&&!opp.length&&!unc.length)h+=`<p>Henüz ayrıştığınız bir cevap ya da tavır yok. Konum bulucuyu doldurup kartlardaki iddialara tavır aldıkça burası dolar.</p>`;
 return h+`</details>`}).join("")};
-document.addEventListener("click",e=>{const b=e.target.closest(".tv button");if(b){const cid=b.closest(".tv").dataset.c,v=+b.dataset.v;if(st[cid]===v)delete st[cid];else st[cid]=v;syncTV();save();renderCmp();renderTVF();return}const a=e.target.closest("[data-show]");if(a){e.preventDefault();remember(a);if(view!=="kesfet:harita")setView("kesfet:harita");if(fam&&T.find(t=>t.id==a.dataset.show).f!=fam){fam=null;renderF()}show(a.dataset.show);document.querySelector(".mapgrid").scrollIntoView({behavior:"smooth"})}});
+document.addEventListener("click",e=>{const b=e.target.closest(".tv button");if(b){const cid=b.closest(".tv").dataset.c,v=+b.dataset.v;if(st[cid]===v)delete st[cid];else st[cid]=v;syncTV();save();renderCmp();renderTVF();renderTutar();return}const a=e.target.closest("[data-show]");if(a){e.preventDefault();remember(a);if(view!=="kesfet:harita")setView("kesfet:harita");if(fam&&T.find(t=>t.id==a.dataset.show).f!=fam){fam=null;renderF()}show(a.dataset.show);document.querySelector(".mapgrid").scrollIntoView({behavior:"smooth"})}});
 const nk=document.getElementById("nick"),cpm=document.getElementById("cpmsg");
 nk.addEventListener("input",()=>{nick=nk.value.slice(0,20);save();renderCmp()});
 document.getElementById("copy").addEventListener("click",()=>{const l=link(),lk=document.getElementById("lnk");lk.value=l;const fb=()=>{lk.focus();lk.select();cpm.textContent="Bağlantı seçildi, elle kopyala"};try{navigator.clipboard.writeText(l).then(()=>{cpm.textContent="Kopyalandı"},fb)}catch(err){fb()}});
@@ -761,6 +765,42 @@ const updBack=()=>{const t=navStack[navStack.length-1];bb.hidden=!t;if(t)bb.text
 const remember=el=>{const sec=el.closest("section[id]"),id=sec?sec.id:(el.closest("header")?"header":"");navStack.push({view,y:scrollY,el,label:SECN[id]||"Önceki yer"});try{history.pushState({lta:navStack.length},"")}catch(err){}updBack()};
 bb.addEventListener("click",()=>{try{history.back()}catch(err){window.dispatchEvent(new PopStateEvent("popstate"))}});
 window.addEventListener("popstate",()=>{const t=navStack.pop();if(!t)return;setView(t.view);window.scrollTo(0,t.y);if(t.el.isConnected)t.el.focus({preventScroll:true});updBack()});
+// ---- tutarlılık analizi: elle yazılmış gerilim kuralları (puan yok) ----
+// a/b: {q:soru indeksi, o:[seçenekler]} ya da {c:iddia kimliği, v:1 katılıyorum | 2 katılmıyorum}. "Emin değilim" (3) hiçbir kuralı tetiklemez.
+const TR=[
+{a:{q:3,o:[0,1]},b:{c:"c21",v:1},why:"Devletin emirlerine salt emir oldukları için uyma ödevi tanıyorsun; ama devleti organize bir hırsızlık sayıyorsun. Hırsıza itaat ödevi olmaz.",cik:"Rothbard itaat ödevini tümden reddeder. Nozick ise ödevi koruma işleviyle sınırlar ve tekeli bağımsızları tazmin ettiği ölçüde meşru sayar.",ref:["c21","c36"]},
+{a:{q:0,o:[3]},b:{c:"c19",v:1},why:"Hakları sonuçlardan türetiyorsun ama “daha iyi bir sonuç için bile ihlal edilemez” diyorsun. Sonuçtan gelen bir hak, daha iyi sonuç karşısında istisnasız kalamaz.",cik:"Kural sonuççuluğu: istisnasız uyulan genel kurallar uzun vadede en iyi sonucu verir (Hayek'in genel ve soyut kuralları). Ya da eşik deontolojisi: haklar neredeyse her zaman bağlar, felakette esner.",ref:["c19","c29"]},
+{a:{q:1,o:[2]},b:{c:"c19",v:1},why:"Açlık örneğinde el koymayı bir hesap meselesi saydın, ama hakları yan kısıt sayıyorsun.",cik:"Eşik deontolojisi: haklar sıradan durumlarda yan kısıttır, ancak felaket ölçeğinde esner. 2. sorudaki ikinci seçenek tam bu pozisyon.",ref:["c19"]},
+{a:{q:2,o:[0]},b:{c:"c22",v:1},why:"İlk işleyenin kaynağa tam sahip olacağını söylüyorsun, ama herkesin doğal kaynakların değerinde eşit payı olduğuna da katılıyorsun. Aynı kaynak için ikisi birlikte tutmaz.",cik:"Steiner ve Vallentyne: işleyen sahip olur, ama kaynağın emek dışı değeri için topluluğa rant öder. Locke'çu şartın vergiye çevrilmiş hali.",ref:["c22","c01"]},
+{a:{q:4,o:[4]},b:{c:"c36",v:1},why:"Devletsiz bir düzen seçtin, ama minimal devletin kimsenin hakkını ihlal etmeden koruma ajanslarından doğabileceğini kabul ediyorsun. Öyleyse devletsizlik zorunlu değil.",cik:"Rothbard ve Childs (1977): geçişin her adımı rıza dışıdır, yani minimal devlet meşru biçimde doğamaz. D. Friedman ise sonuççudur: doğabilir, ama doğmaması daha iyidir.",ref:["c36","c09"]},
+{a:{q:4,o:[1,2]},b:{c:"c18",v:1},why:"Bir bireye tanımadığın zorlama hakkını devlete tanımak için iyi bir neden olmadığını söylüyorsun, ama bir devlet tekeli seçtin.",cik:"Nozick: tekel, bağımsızları tazmin ettiği için meşrudur. Huemer'e göre bu bile yetmez; geriye yalnızca gönüllü koruma kalır.",ref:["c18","c36"]},
+{a:{q:8,o:[0]},b:{c:"c33",v:1},why:"Demokrasiyi meşruiyetin kaynağı sayıyorsun, ama demokratik vergilendirmeyi kişinin hayatına başkalarının ortak olması sayıyorsun (köle masalı).",cik:"Rawlsçu cevap: sorun sahiplik değil, kurumların herkese gerekçelendirilip gerekçelendirilemediğidir (Gaus, Tomasi).",ref:["c33","c12"]},
+{a:{q:5,o:[2]},b:{c:"c20",v:1},why:"Sosyal minimumu adalet gereği sayıyorsun, ama emek gelirinin vergilendirilmesini zorla çalıştırma sayıyorsun. Sosyal minimum çoğunlukla bu vergiyle finanse edilir.",cik:"Sol liberteryenler minimumu emekten değil, doğal kaynak rantından finanse eder (Steiner, Otsuka). Böylece öz-mülkiyete dokunmadan yeniden dağıtım yapılır.",ref:["c20","c22"]},
+{a:{q:0,o:[0]},b:{c:"c02",v:1},why:"Hakları kurumlardan bağımsız bir ahlaki olgu sayıyorsun, ama mülkiyet ve adaletin konvansiyon olduğuna katılıyorsun.",cik:"Bir yol: yalnız öz-mülkiyeti önceden verili saymak, dış dünyanın mülkiyetini konvansiyona bırakmak. Sol liberteryenler bu ayrıma yakındır; Hume ise konvansiyonun keyfi olmadığını vurgular.",ref:["c02","c30"]},
+{a:{q:4,o:[0]},b:{c:"c24",v:2},why:"Mutlak bir egemen seçtin, ama egemensiz hayatın çekilmez olacağı iddiasına katılmıyorsun. Mutlak egemenin klasik gerekçesi ortadan kalkıyor.",cik:"Yarvin'in yolu: egemenin gerekçesi güvenlik değil, iyi yönetimdir. Devlet hissedarlara ait bir şirket gibi yönetilir.",ref:["c24","c26"]},
+{a:{q:8,o:[0]},b:{c:"c16",v:1},why:"Demokrasiyi meşruiyetin kaynağı sayıyorsun, ama monarşinin daha uzun vadeli bir yönetim ürettiğine katılıyorsun.",cik:"Meşruiyet ile verimlilik ayrı sorulardır: Hoppe verimliliği, Rawlsçular meşruiyeti öne alır. İkisini birlikte tutmak için hangisinin öncelikli olduğunu seçmek gerekir. Ampirik not da Hoppe'nin öngörüsünü zayıflatıyor.",ref:["c16"]},
+{a:{c:"c01",v:1},b:{c:"c34",v:1},why:"Emeğini kattığın şeyin senin olacağına katılıyorsun, ama emeği bir şeye karıştırmanın sahiplik için yetmediğine de katılıyorsun.",cik:"Locke savunucularının cevabı: sahipliği karıştırmanın kendisi değil, emeğin kattığı değer verir. Waldron ise emeğin karışacak bir şey olmadığını savunur.",ref:["c01","c34"]},
+{a:{c:"c23",v:1},b:{c:"c21",v:1},why:"Toprak rantının topluluğa ait olduğunu ve vergilendirilmesi gerektiğini savunuyorsun, ama devleti organize bir hırsızlık sayıyorsun.",cik:"Sol liberteryen cevap: rant vergisi hırsızlık değil, ortak mülkün kirasıdır (Steiner). Fonu devlet değil, ortak bir kurum yönetebilir.",ref:["c23","c21"]},
+{a:{c:"c19",v:1},b:{c:"c29",v:1},why:"Hakları istisnasız yan kısıt sayıyorsun, ama özgürlüğün en iyi savunusunun sonuçlar olduğunu söylüyorsun.",cik:"İki düzeyli görüş: kurallara istisnasız uymanın kendisini sonuçla savunmak. Mises ve Hayek bu yola yakındır.",ref:["c19","c29"]},
+{a:{c:"c35",v:1},b:{c:"c24",v:1},why:"Devlete itaatin bir ahlaki yanılsama olduğuna ve egemensiz hayatın çekilmez olacağına aynı anda katılıyorsun.",cik:"Huemer: düzen otorite gerektirmez, polisentrik koruma yeter. Hobbesçu cevap: düzen ancak itaatle sağlanır; yanılsama işlevseldir (Hume'un kanaat tezi).",ref:["c35","c24"]},
+{a:{c:"c43",v:1},b:{c:"c36",v:1},why:"Rakip koruma ajanslarının kartel kurmayıp rekabet edeceğini söylüyorsun, ama ajanslardan tek bir baskın ajansın, yani minimal devletin doğacağını da kabul ediyorsun.",cik:"Cowen–Friedman tartışması tam bu soruda: Nozick ölçek ekonomisine ve doğal tekele dayanır; Caplan ve Stringham kartelin ve tekelin zor olduğunu savunur.",ref:["c43","c36"]},
+{a:{c:"c20",v:1},b:{c:"c14",v:1},why:"Emek gelirinin vergilendirilmesini zorla çalıştırma sayıyorsun, ama vergiyle finanse edilen koşulsuz temel geliri savunuyorsun.",cik:"Zwolinski: temel gelir, mevcut refah devletine göre daha az zorlayıcı bir ikinci en iyidir. Sol liberteryenler ise onu kaynak rantından finanse eder.",ref:["c20","c14"]},
+{a:{c:"c27",v:1},b:{c:"c19",v:1},why:"Hakların bireyin üzerine konmuş hayaletler olduğuna ve haklarının yan kısıt olduğuna aynı anda katılıyorsun.",cik:"Stirner'den bireyci anarşizme giden yol: haklar doğal değildir, ama egoistler arasındaki anlaşmayla kurulabilir.",ref:["c27","c19"]},
+{a:{c:"c02",v:1},b:{c:"c21",v:1},why:"Mülkiyetin bir konvansiyon olduğuna katılıyorsun, ama vergiyi hırsızlık sayıyorsun. Hırsızlık, konvansiyondan önce gelen bir mülkiyet hakkı varsayar.",cik:"Murphy ve Nagel'in tezi tam budur. Hayekçi cevap: vergi hırsızlık değildir, ama genel ve öngörülebilir kurallara bağlı olmalıdır.",ref:["c02","c21"]},
+{a:{c:"c33",v:1},b:{c:"c12",v:1},why:"Demokratik vergilendirmeyi kişinin hayatına ortak olmak sayıyorsun, ama zorlamanın makul herkese gerekçelendirilerek meşrulaşabileceğini kabul ediyorsun.",cik:"Gaus: kamusal gerekçelendirme eşiği yüksektir; vergilerin çoğu bu eşiği geçemeyebilir, ama ilke olarak geçebilir. Köle masalı ise ilke düzeyinde itiraz eder.",ref:["c33","c12"]}
+];
+const MINTV=10;
+const condOk=(k,sa,so)=>k.q!=null?(sa[k.q]!=null&&k.o.includes(sa[k.q])):so[k.c]===k.v;
+const tensions=(sa,so)=>TR.filter(r=>condOk(r.a,sa,so)&&condOk(r.b,sa,so));
+const tvN=so=>Object.values(so).filter(Boolean).length;
+const eligible=(sa,so)=>sa[0]!=null&&sa[4]!=null&&tvN(so)>=MINTV;
+const condTxt=(k,sa)=>{if(k.q!=null){const j=sa&&sa[k.q]!=null&&k.o.includes(sa[k.q])?[sa[k.q]]:k.o;return `${k.q+1}. soruda “${j.map(x=>esc(Q[k.q].o[x][0])).join("” ya da “")}”`}const c=CL.find(x=>x[0]==k.c);return `“${esc(c[2])}” iddiasına ${k.v==1?"katılmak":"katılmamak"} <span class="tag">(${esc(srcLbl(c[1]))})</span>`};
+const renderTutar=()=>{const el=document.getElementById("tutar");if(!el)return;const ok=eligible(sel,st);let h=`<h3>Tutarlılık analizi</h3><p class="note" style="margin-top:0">Puan yok, yalnızca gerilim listesi. ${TR.length} kural elle yazıldı ve hepsi aşağıda açık. Gerilim bir kusur değil, bir tartışma noktasıdır; her birinin yanında bu gerilimle nasıl uğraşıldığı yazıyor. “Emin değilim” hiçbir gerilim üretmez.</p>`;
+if(!ok){const need=[];if(sel[0]==null)need.push("1. soruyu");if(sel[4]==null)need.push("5. soruyu");const n=tvN(st);h+=`<p>Analiz için ${need.length?need.join(" ve ")+" cevapla ve ":""}en az ${MINTV} iddiaya tavır al (şu an ${n}/${MINTV}). <a href="#tavirlar">Tavırların listesine git →</a></p>`}
+else{const ts=tensions(sel,st);h+=ts.length?`<p><b>${ts.length} gerilim buldum.</b></p>`+ts.map(r=>`<article class="gr"><p class="pair">${condTxt(r.a,sel)}<br><span class="tag">ile</span><br>${condTxt(r.b,sel)}</p><div class="lbl">Neden gerilim</div><p>${esc(r.why)}</p><div class="lbl">Nasıl uğraşılmış</div><p>${esc(r.cik)}</p><p class="tag">${r.ref.map(id=>{const c=CL.find(x=>x[0]==id);return `${esc(srcLbl(c[1]))}: ${goto(c)}`}).join(" · ")}</p></article>`).join(""):`<p>Bu kurallara göre seçimlerinde gerilim bulamadım. Kurallar her şeyi kapsamıyor; listeye aşağıdan bakabilirsin.</p>`}
+h+=`<details><summary>Bütün kurallar (${TR.length})</summary><ol class="trl">${TR.map(r=>`<li>${condTxt(r.a)} + ${condTxt(r.b)}<br><span class="tag">${esc(r.why)}</span></li>`).join("")}</ol></details>`;
+el.innerHTML=h};
+const gerLbl=f=>{const me_=eligible(sel,st),fr=eligible(f.sel,f.st);return ` · Gerilim: ${me_?"sen "+tensions(sel,st).length:"sende yeterli cevap yok"}, ${fr?esc(f.n)+" "+tensions(f.sel,f.st).length:esc(f.n)+" için yeterli cevap yok"}`};
 renderF();renderQ();calc();renderT();show(cur);renderTVF();renderTVList();syncTV();
 setView("kesfet");{const h0=location.hash.slice(1);if(h0&&!/(^|&)p=/.test(h0)){let id=h0;try{id=decodeURIComponent(h0)}catch(err){}goAnchor(id)}}
 }
